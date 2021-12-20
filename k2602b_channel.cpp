@@ -33,7 +33,7 @@ K2602B_Channel::K2602B_Channel(QString name, CommChannel* pCommunicationChannel,
 }
 
 
-void
+bool
 K2602B_Channel::setOnOff(bool bOn) {
     QString sCommand;
     if(bOn) {
@@ -44,7 +44,23 @@ K2602B_Channel::setOnOff(bool bOn) {
         sCommand = QString("smu%1.source.output = smu%2.%3")
                    .arg(sName, sName, "OUTPUT_OFF");
     }
-    pComm->send(sCommand);
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
+K2602B_Channel::setSourceI() {
+    QString sCommand;
+    sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCAMPS").arg(sName, sName);
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
+K2602B_Channel::setSourceV() {
+    QString sCommand;
+    sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCVOLTS").arg(sName, sName);
+    return pComm->send(sCommand) != LXI_ERROR;
 }
 
 
@@ -53,5 +69,16 @@ K2602B_Channel::getOnOff() {
     bool bOk;
     double result = pComm->Query(QString("print(smu%1.source.output)").arg(sName)).toDouble(&bOk);
 //    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
+    return result > 0.0;
+}
+
+
+bool
+K2602B_Channel::getSourceV() {
+    bool bOk;
+    // result == 0 Current Source
+    //        == 1 Voltage Source
+    double result = pComm->Query(QString("print(smu%1.source.func)").arg(sName)).toDouble(&bOk);
+    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
     return result > 0.0;
 }

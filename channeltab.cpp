@@ -93,10 +93,10 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
 
     setLayout(pLayout);
 
-    InitSignals();
+//    onSourceRangeChangedUi(0);
+//    onSourceModeChangedUi(0);
 
-    onSourceRangeChangedUi(0);
-    onSourceModeChangedUi(0);
+    InitSignals();
 
     restoreSettings();
 }
@@ -122,6 +122,44 @@ ChannelTab::InitSignals() {
             this, SLOT(onSourceRangeChangedUi(int)));
     connect(pOnOffButton, SIGNAL(stateChanged(int)),
             this, SLOT(onOnOffChangedUi(int)));
+
+    connect(pSourceRangeEdit, SIGNAL(editingFinished()),
+            this, SLOT(onSourceRangeEditingFinished()));
+    connect(pSourceValueEdit, SIGNAL(editingFinished()),
+            this, SLOT(onSourceValueEditingFinished()));
+    connect(pMeasureRangeEdit, SIGNAL(editingFinished()),
+            this, SLOT(onMeasureRangeEditingFinished()));
+    connect(pMeasureValueEdit, SIGNAL(editingFinished()),
+            this, SLOT(onMeasureValueEditingFinished()));
+}
+
+
+void
+ChannelTab::onSourceModeChangedUi(int selectedItem) {
+    pMeasureMode->setCurrentIndex(1-selectedItem);
+    QString sValue = pSourceMode->itemText(selectedItem);
+    bool bResult;
+    if(sValue.contains("I")) {
+        bResult = pChannel->setSourceI();
+    }
+    else { // Measure
+        bResult = pChannel->setSourceV();
+    }
+    (void)bResult;
+}
+
+
+void
+ChannelTab::onMeasureModeChangedUi(int selectedItem) {
+    pSourceMode->setCurrentIndex(1-selectedItem);
+    QString sValue = pMeasureMode->itemText(selectedItem);
+    bool bResult;
+    if(sValue.contains("I")) {
+        bResult = pChannel->setSourceV();
+    }
+    else { // Measure
+        bResult = pChannel->setSourceI();
+    }
 }
 
 
@@ -138,31 +176,52 @@ ChannelTab::onSourceRangeChangedUi(int selectedItem) {
 
 
 void
-ChannelTab::onSourceModeChangedUi(int selectedItem) {
-    pMeasureMode->setCurrentIndex(1-selectedItem);
-    QString sValue = pSourceMode->itemText(selectedItem);
-    if(sValue.contains("I")) {
-    }
-    else { // Measure
-    }
-}
-
-
-void
-ChannelTab::onMeasureModeChangedUi(int selectedItem) {
-    pSourceMode->setCurrentIndex(1-selectedItem);
-    QString sValue = pMeasureMode->itemText(selectedItem);
-    if(sValue.contains("I")) {
-    }
-    else { // Measure
-    }
-}
-
-
-void
 ChannelTab::onOnOffChangedUi(int) {
     pChannel->setOnOff(pOnOffButton->isChecked());
     bool bResult = pChannel ->getOnOff();
     pOnOffButton->setChecked(bResult);
 //    qDebug() << __FILE__ << "Line:" <<__LINE__ << bResult;
+}
+
+
+void
+ChannelTab::setSourceMode_Ui(bool bSourceV) {
+    if(bSourceV) {
+        pMeasureMode->setCurrentIndex(0);
+        pSourceMode->setCurrentIndex(1);
+    }
+    else {
+        pMeasureMode->setCurrentIndex(1);
+        pSourceMode->setCurrentIndex(0);
+    }
+}
+
+
+void
+ChannelTab::onSourceRangeEditingFinished() {
+
+}
+
+
+void
+ChannelTab::onSourceValueEditingFinished() {
+
+}
+
+
+void
+ChannelTab::onMeasureRangeEditingFinished() {
+
+}
+
+
+void
+ChannelTab::onMeasureValueEditingFinished() {
+
+}
+
+
+void
+ChannelTab::setOnOff_Ui(bool bOn) {
+    pOnOffButton->setChecked(bOn);
 }

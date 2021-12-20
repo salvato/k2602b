@@ -33,12 +33,14 @@ public:
     explicit K2602B_Channel(QString name, CommChannel* pCommunicationChannel, QObject *parent=nullptr);
 
 public:
-    void setOnOff(bool bOn);
+    bool setOnOff(bool bOn);
+    bool setSourceI();
+    bool setSourceV();
 
     bool getOnOff();
+    bool getSourceV();
 
 signals:
-
 private:
     QString sName;
     CommChannel* pComm;

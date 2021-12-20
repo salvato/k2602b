@@ -38,6 +38,9 @@ class ChannelTab : public QWidget
 public:
     explicit ChannelTab(K2602B_Channel* pCh, QWidget *parent = nullptr);
 
+    void setOnOff_Ui(bool bOn);
+    void setSourceMode_Ui(bool bSourceV);
+
 protected:
     void saveSettings();
     void restoreSettings();
@@ -46,6 +49,11 @@ protected:
 signals:
 
 public slots:
+    void onSourceRangeEditingFinished();
+    void onSourceValueEditingFinished();
+    void onMeasureRangeEditingFinished();
+    void onMeasureValueEditingFinished();
+
     void onSourceRangeChangedUi(int selectedItem);
     void onSourceModeChangedUi(int selectedItem);
     void onMeasureModeChangedUi(int selectedItem);

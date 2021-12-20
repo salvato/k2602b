@@ -48,6 +48,8 @@ K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
     restoreSettings();
     initLayout();
 
+    updateUi();
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -94,5 +96,8 @@ K2602BWindow::initMessages() {
 
 void
 K2602BWindow::updateUi() {
-
+    for(int i=0; i<2; i++) {
+        pChannelTab[i]->setOnOff_Ui(pK2602B->pChannel[i]->getOnOff());
+        pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->getSourceV());
+    }
 }
