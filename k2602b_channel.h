@@ -36,9 +36,11 @@ public:
     bool setOnOff(bool bOn);
     bool setSourceI();
     bool setSourceV();
+    bool setSourceValue(double dValue);
 
     bool getOnOff();
     bool getSourceV();
+    double getSourceValue();
 
 signals:
 private:

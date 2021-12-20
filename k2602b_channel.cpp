@@ -65,6 +65,18 @@ K2602B_Channel::setSourceV() {
 
 
 bool
+K2602B_Channel::setSourceValue(double dValue) {
+    QString sCommand, sSource;
+    if(getSourceV())
+        sSource = "v";
+    else
+        sSource = "i";
+    sCommand = QString("smu%1.source.level%2 = %3").arg(sName,sSource).arg(dValue);
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
 K2602B_Channel::getOnOff() {
     bool bOk;
     double result = pComm->Query(QString("print(smu%1.source.output)").arg(sName)).toDouble(&bOk);
@@ -76,9 +88,22 @@ K2602B_Channel::getOnOff() {
 bool
 K2602B_Channel::getSourceV() {
     bool bOk;
-    // result == 0 Current Source
-    //        == 1 Voltage Source
-    double result = pComm->Query(QString("print(smu%1.source.func)").arg(sName)).toDouble(&bOk);
-    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
-    return result > 0.0;
+    double result = pComm->Query(QString("print(smu%1.source.level)").arg(sName)).toDouble(&bOk);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << result;
+    return result;
+}
+
+
+double
+K2602B_Channel::getSourceValue() {
+    bool bOk;
+    QString sCommand, sSource;
+    if(getSourceV())
+        sSource = "v";
+    else
+        sSource = "i";
+    sCommand = QString("print(smu%1.source.level%2)").arg(sName, sSource);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+//    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
+    return result;
 }

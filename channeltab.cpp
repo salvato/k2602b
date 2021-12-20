@@ -198,13 +198,15 @@ ChannelTab::setSourceMode_Ui(bool bSourceV) {
 
 
 void
-ChannelTab::onSourceRangeEditingFinished() {
-
+ChannelTab::onSourceValueEditingFinished() {
+    double dValue = pSourceValueEdit->text().toDouble();
+    pChannel->setSourceValue(dValue);
+    pSourceValueEdit->setText(QString("%1").arg(pChannel->getSourceValue()));
 }
 
 
 void
-ChannelTab::onSourceValueEditingFinished() {
+ChannelTab::onSourceRangeEditingFinished() {
 
 }
 
