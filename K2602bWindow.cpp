@@ -96,8 +96,10 @@ K2602BWindow::initMessages() {
 
 void
 K2602BWindow::updateUi() {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__;
     for(int i=0; i<2; i++) {
         pChannelTab[i]->setOnOff_Ui(pK2602B->pChannel[i]->getOnOff());
-        pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->getSourceV());
+        pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->getSourceFunction());
+        pChannelTab[i]->setSourceValue_Ui(pK2602B->pChannel[i]->getSourceValue());
     }
 }

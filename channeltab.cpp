@@ -93,9 +93,6 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
 
     setLayout(pLayout);
 
-//    onSourceRangeChangedUi(0);
-//    onSourceModeChangedUi(0);
-
     InitSignals();
 
     restoreSettings();
@@ -136,14 +133,15 @@ ChannelTab::InitSignals() {
 
 void
 ChannelTab::onSourceModeChangedUi(int selectedItem) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName() << selectedItem;
     pMeasureMode->setCurrentIndex(1-selectedItem);
     QString sValue = pSourceMode->itemText(selectedItem);
     bool bResult;
     if(sValue.contains("I")) {
-        bResult = pChannel->setSourceI();
+        bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
     }
-    else { // Measure
-        bResult = pChannel->setSourceV();
+    else {
+        bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
     }
     (void)bResult;
 }
@@ -151,20 +149,23 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
 
 void
 ChannelTab::onMeasureModeChangedUi(int selectedItem) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName() << selectedItem;
     pSourceMode->setCurrentIndex(1-selectedItem);
     QString sValue = pMeasureMode->itemText(selectedItem);
     bool bResult;
     if(sValue.contains("I")) {
-        bResult = pChannel->setSourceV();
+        bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
     }
     else { // Measure
-        bResult = pChannel->setSourceI();
+        bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
     }
+    (void)bResult;
 }
 
 
 void
 ChannelTab::onSourceRangeChangedUi(int selectedItem) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName() << selectedItem;
     QString sValue = pSourceRangeCombo->itemText(selectedItem);
     if(sValue == "AUTO") {
         pSourceRangeEdit->setDisabled(true);
@@ -178,14 +179,15 @@ ChannelTab::onSourceRangeChangedUi(int selectedItem) {
 void
 ChannelTab::onOnOffChangedUi(int) {
     pChannel->setOnOff(pOnOffButton->isChecked());
-    bool bResult = pChannel ->getOnOff();
+    bool bResult = pChannel->getOnOff();
     pOnOffButton->setChecked(bResult);
-//    qDebug() << __FILE__ << "Line:" <<__LINE__ << bResult;
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName() << bResult;
 }
 
 
 void
 ChannelTab::setSourceMode_Ui(bool bSourceV) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName();
     if(bSourceV) {
         pMeasureMode->setCurrentIndex(0);
         pSourceMode->setCurrentIndex(1);
@@ -198,7 +200,15 @@ ChannelTab::setSourceMode_Ui(bool bSourceV) {
 
 
 void
+ChannelTab::setSourceValue_Ui(double dValue) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName();
+    pSourceValueEdit->setText(QString("%1").arg(dValue));
+}
+
+
+void
 ChannelTab::onSourceValueEditingFinished() {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName();
     double dValue = pSourceValueEdit->text().toDouble();
     pChannel->setSourceValue(dValue);
     pSourceValueEdit->setText(QString("%1").arg(pChannel->getSourceValue()));
@@ -207,23 +217,27 @@ ChannelTab::onSourceValueEditingFinished() {
 
 void
 ChannelTab::onSourceRangeEditingFinished() {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName();
 
 }
 
 
 void
 ChannelTab::onMeasureRangeEditingFinished() {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName();
 
 }
 
 
 void
 ChannelTab::onMeasureValueEditingFinished() {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName();
 
 }
 
 
 void
 ChannelTab::setOnOff_Ui(bool bOn) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << pChannel->getName() << bOn;
     pOnOffButton->setChecked(bOn);
 }

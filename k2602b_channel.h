@@ -33,18 +33,23 @@ public:
     explicit K2602B_Channel(QString name, CommChannel* pCommunicationChannel, QObject *parent=nullptr);
 
 public:
+    typedef enum smuFunction {
+        CURRENT = 0,
+        VOLTAGE
+    } outputFunction;
+    QString getName();
     bool setOnOff(bool bOn);
-    bool setSourceI();
-    bool setSourceV();
+    bool setSourceFunction(smuFunction function);
     bool setSourceValue(double dValue);
 
     bool getOnOff();
-    bool getSourceV();
+    bool getSourceFunction();
     double getSourceValue();
 
 signals:
 private:
     QString sName;
+    QString sCommand;
     CommChannel* pComm;
 };
 

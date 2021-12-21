@@ -38,8 +38,10 @@ class ChannelTab : public QWidget
 public:
     explicit ChannelTab(K2602B_Channel* pCh, QWidget *parent = nullptr);
 
+public:
     void setOnOff_Ui(bool bOn);
     void setSourceMode_Ui(bool bSourceV);
+    void setSourceValue_Ui(double dValue);
 
 protected:
     void saveSettings();

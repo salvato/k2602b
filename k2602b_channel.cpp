@@ -35,6 +35,7 @@ K2602B_Channel::K2602B_Channel(QString name, CommChannel* pCommunicationChannel,
 
 bool
 K2602B_Channel::setOnOff(bool bOn) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << bOn;
     QString sCommand;
     if(bOn) {
         sCommand = QString("smu%1.source.output = smu%2.%3")
@@ -49,17 +50,13 @@ K2602B_Channel::setOnOff(bool bOn) {
 
 
 bool
-K2602B_Channel::setSourceI() {
+K2602B_Channel::setSourceFunction(smuFunction function) {
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName;
     QString sCommand;
-    sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCAMPS").arg(sName, sName);
-    return pComm->send(sCommand) != LXI_ERROR;
-}
-
-
-bool
-K2602B_Channel::setSourceV() {
-    QString sCommand;
-    sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCVOLTS").arg(sName, sName);
+    if(function == CURRENT)
+        sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCAMPS").arg(sName, sName);
+    else
+        sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCVOLTS").arg(sName, sName);
     return pComm->send(sCommand) != LXI_ERROR;
 }
 
@@ -67,30 +64,39 @@ K2602B_Channel::setSourceV() {
 bool
 K2602B_Channel::setSourceValue(double dValue) {
     QString sCommand, sSource;
-    if(getSourceV())
+    if(getSourceFunction())
         sSource = "v";
     else
         sSource = "i";
     sCommand = QString("smu%1.source.level%2 = %3").arg(sName,sSource).arg(dValue);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << dValue;
     return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+QString
+K2602B_Channel::getName() {
+    return sName;
 }
 
 
 bool
 K2602B_Channel::getOnOff() {
     bool bOk;
-    double result = pComm->Query(QString("print(smu%1.source.output)").arg(sName)).toDouble(&bOk);
-//    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
+    sCommand = QString("print(smu%1.source.output)").arg(sName);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
     return result > 0.0;
 }
 
 
 bool
-K2602B_Channel::getSourceV() {
+K2602B_Channel::getSourceFunction() {
     bool bOk;
-    double result = pComm->Query(QString("print(smu%1.source.level)").arg(sName)).toDouble(&bOk);
-    qDebug() << __FILE__ << "Line:" << __LINE__ << result;
-    return result;
+    sCommand = QString("print(smu%1.source.func)").arg(sName);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
+    return result > 0.0;
 }
 
 
@@ -98,12 +104,12 @@ double
 K2602B_Channel::getSourceValue() {
     bool bOk;
     QString sCommand, sSource;
-    if(getSourceV())
+    if(getSourceFunction())
         sSource = "v";
     else
         sSource = "i";
     sCommand = QString("print(smu%1.source.level%2)").arg(sName, sSource);
     double result = pComm->Query(sCommand).toDouble(&bOk);
-//    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
     return result;
 }
