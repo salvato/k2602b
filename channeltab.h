@@ -42,6 +42,8 @@ public:
     void setOnOff_Ui(bool bOn);
     void setSourceMode_Ui(bool bSourceV);
     void setSourceValue_Ui(double dValue);
+    void setSourceRange_Ui(double dValue);
+    void setMeasureRange_Ui(double dValue);
 
 protected:
     void saveSettings();
@@ -54,7 +56,6 @@ public slots:
     void onSourceRangeEditingFinished();
     void onSourceValueEditingFinished();
     void onMeasureRangeEditingFinished();
-    void onMeasureValueEditingFinished();
 
     void onSourceRangeChangedUi(int selectedItem);
     void onSourceModeChangedUi(int selectedItem);

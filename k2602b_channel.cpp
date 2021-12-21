@@ -74,6 +74,33 @@ K2602B_Channel::setSourceValue(double dValue) {
 }
 
 
+// Set the maximum expected voltage or current to be sourced
+bool
+K2602B_Channel::setSourceRange(double dValue) {
+    QString sCommand, sSource;
+    if(getSourceFunction())
+        sSource = "v";
+    else
+        sSource = "i";
+    sCommand = QString("smu%1.source.range%2 = %3").arg(sName,sSource).arg(dValue);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << dValue;
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
+K2602B_Channel::setMeasureRange(double dValue) {
+    QString sCommand, sSource;
+    if(getSourceFunction())
+        sSource = "v";
+    else
+        sSource = "i";
+    sCommand = QString("smu%1.measure.range%2 = %3").arg(sName,sSource).arg(dValue);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << dValue;
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
 QString
 K2602B_Channel::getName() {
     return sName;
@@ -109,6 +136,37 @@ K2602B_Channel::getSourceValue() {
     else
         sSource = "i";
     sCommand = QString("print(smu%1.source.level%2)").arg(sName, sSource);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
+    return result;
+}
+
+
+// Get the maximum expected voltage or current to be sourced
+double
+K2602B_Channel::getSourceRange() {
+    bool bOk;
+    QString sCommand, sSource;
+    if(getSourceFunction())
+        sSource = "v";
+    else
+        sSource = "i";
+    sCommand = QString("print(smu%1.source.range%2)").arg(sName, sSource);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
+    return result;
+}
+
+
+double
+K2602B_Channel::getMeasureRange() {
+    bool bOk;
+    QString sCommand, sMeasure;
+    if(getSourceFunction())
+        sMeasure = "i";
+    else
+        sMeasure = "v";
+    sCommand = QString("print(smu%1.measure.range%2)").arg(sName, sMeasure);
     double result = pComm->Query(sCommand).toDouble(&bOk);
     qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
     return result;

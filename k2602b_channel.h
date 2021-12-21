@@ -41,12 +41,17 @@ public:
     bool setOnOff(bool bOn);
     bool setSourceFunction(smuFunction function);
     bool setSourceValue(double dValue);
+    bool setSourceRange(double dValue);
+    bool setMeasureRange(double dValue);
 
     bool getOnOff();
     bool getSourceFunction();
     double getSourceValue();
+    double getSourceRange();
+    double getMeasureRange();
 
 signals:
+
 private:
     QString sName;
     QString sCommand;

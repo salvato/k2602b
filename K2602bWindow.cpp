@@ -1,5 +1,4 @@
-/*
-MIT License
+/* MIT License
 
 // Copyright (c) 2021 Gabriele Salvato
 
@@ -101,5 +100,7 @@ K2602BWindow::updateUi() {
         pChannelTab[i]->setOnOff_Ui(pK2602B->pChannel[i]->getOnOff());
         pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->getSourceFunction());
         pChannelTab[i]->setSourceValue_Ui(pK2602B->pChannel[i]->getSourceValue());
+        pChannelTab[i]->setSourceRange_Ui(pK2602B->pChannel[i]->getSourceRange());
+        pChannelTab[i]->setMeasureRange_Ui(pK2602B->pChannel[i]->getMeasureRange());
     }
 }
