@@ -44,6 +44,7 @@ public:
     void setSourceValue_Ui(double dValue);
     void setSourceRange_Ui(double dValue);
     void setMeasureRange_Ui(double dValue);
+    void setLimit_Ui(double dValue);
 
 protected:
     void saveSettings();
@@ -56,6 +57,7 @@ public slots:
     void onSourceRangeEditingFinished();
     void onSourceValueEditingFinished();
     void onMeasureRangeEditingFinished();
+    void onMeasureLimitEditingFinished();
 
     void onSourceRangeChangedUi(int selectedItem);
     void onSourceModeChangedUi(int selectedItem);
@@ -77,10 +79,12 @@ private:
     QLabel*    pMeasureRangeLabel;
     QComboBox* pMeasureRangeCombo;
     QLineEdit* pMeasureRangeEdit;
-    QLabel*    pMeasureValueLabel;
-    QLineEdit* pMeasureValueEdit;
+    QLabel*    pMeasureLimitLabel;
+    QLineEdit* pMeasureLimitEdit;
 
     QLabel*    pOnOffLabel;
     QCheckBox* pOnOffButton;
+
+    QCheckBox* pComplianceButton;
 };
 

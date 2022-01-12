@@ -43,12 +43,15 @@ public:
     bool setSourceValue(double dValue);
     bool setSourceRange(double dValue);
     bool setMeasureRange(double dValue);
+    bool setLimit(double dValue);
 
     bool getOnOff();
     bool getSourceFunction();
     double getSourceValue();
     double getSourceRange();
     double getMeasureRange();
+    double getLimit();
+    bool getCompliance();
 
 signals:
 

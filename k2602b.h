@@ -47,7 +47,7 @@ signals:
 public slots:
 
 private:
-    CommChannel*    pComm;
+    CommChannel* pComm;
     QString sAddress;
     bool bInitialized;
 };

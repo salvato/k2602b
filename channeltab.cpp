@@ -62,13 +62,17 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
     pMeasureRangeEdit->setAlignment(Qt::AlignRight);
     pMeasureRangeEdit->setMaximumWidth(120);
 
-    pMeasureValueLabel = new QLabel("Value");
-    pMeasureValueLabel->setMaximumWidth(120);
-    pMeasureValueEdit = new QLineEdit("---");
-    pMeasureValueEdit->setMaximumWidth(120);
-    pMeasureValueEdit->setAlignment(Qt::AlignRight);
-    pMeasureValueEdit->setReadOnly(true);
+    pMeasureLimitLabel = new QLabel("Limit");
+    pMeasureLimitLabel->setMaximumWidth(120);
+    pMeasureLimitEdit = new QLineEdit("0.0");
+    pMeasureLimitEdit->setMaximumWidth(120);
+    pMeasureLimitEdit->setAlignment(Qt::AlignRight);
 
+    pComplianceButton = new QCheckBox("Compliance");
+    pComplianceButton->setLayoutDirection(Qt::RightToLeft);
+    pComplianceButton->setMaximumWidth(120);
+    pComplianceButton->setAttribute(Qt::WA_TransparentForMouseEvents);
+    pComplianceButton->setFocusPolicy(Qt::NoFocus);
 
     pOnOffLabel = new QLabel("Output");
     pOnOffLabel->setMaximumWidth(120);
@@ -87,11 +91,13 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
     pLayout->addWidget(pMeasureRangeLabel,  1, 1, 1, 1, Qt::AlignRight);
     pLayout->addWidget(pMeasureRangeCombo,  1, 2, 1, 1);
     pLayout->addWidget(pMeasureRangeEdit,   1, 3, 1, 1);
-    pLayout->addWidget(pMeasureValueLabel,  1, 4, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pMeasureValueEdit,   1, 5, 1, 1);
+    pLayout->addWidget(pMeasureLimitLabel,  1, 4, 1, 1, Qt::AlignRight);
+    pLayout->addWidget(pMeasureLimitEdit,   1, 5, 1, 1);
 
-    pLayout->addWidget(pOnOffLabel,         2, 0, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pOnOffButton,        2, 1, 1, 1);
+    pLayout->addWidget(pComplianceButton,   2, 0, 1, 1);
+
+    pLayout->addWidget(pOnOffLabel,         2, 4, 1, 1, Qt::AlignRight);
+    pLayout->addWidget(pOnOffButton,        2, 5, 1, 1);
 
     setLayout(pLayout);
     InitSignals();
@@ -126,6 +132,8 @@ ChannelTab::InitSignals() {
             this, SLOT(onSourceValueEditingFinished()));
     connect(pMeasureRangeEdit, SIGNAL(editingFinished()),
             this, SLOT(onMeasureRangeEditingFinished()));
+    connect(pMeasureLimitEdit, SIGNAL(editingFinished()),
+            this, SLOT(onMeasureLimitEditingFinished()));
 }
 
 
@@ -263,6 +271,18 @@ ChannelTab::setMeasureRange_Ui(double dValue) {
 
 
 void
+ChannelTab::setLimit_Ui(double dValue) {
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+    pMeasureLimitEdit->setText(QString("%1").arg(dValue));
+}
+
+
+void
 ChannelTab::onSourceValueEditingFinished() {
     qDebug() << __FILE__
              << "Line:"
@@ -301,6 +321,20 @@ ChannelTab::onMeasureRangeEditingFinished() {
     double dValue = pMeasureRangeEdit->text().toDouble();
     pChannel->setMeasureRange(dValue);
     pMeasureRangeEdit->setText(QString("%1").arg(pChannel->getSourceRange()));
+}
+
+
+void
+ChannelTab::onMeasureLimitEditingFinished() {
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+    double dValue = pMeasureLimitEdit->text().toDouble();
+    pChannel->setLimit(dValue);
+    pMeasureLimitEdit->setText(QString("%1").arg(pChannel->getLimit()));
 }
 
 

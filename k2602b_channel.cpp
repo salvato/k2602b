@@ -25,7 +25,13 @@
 #include <QDebug>
 
 
-K2602B_Channel::K2602B_Channel(QString name, CommChannel* pCommunicationChannel, QObject *parent)
+#define SOURCE_V true
+#define SOURCE_I false
+
+
+K2602B_Channel::K2602B_Channel(QString name,
+                               CommChannel* pCommunicationChannel,
+                               QObject* parent)
     : QObject{parent}
     , sName(name)
     , pComm(pCommunicationChannel)
@@ -64,7 +70,7 @@ K2602B_Channel::setSourceFunction(smuFunction function) {
 bool
 K2602B_Channel::setSourceValue(double dValue) {
     QString sCommand, sSource;
-    if(getSourceFunction())
+    if(getSourceFunction() == SOURCE_V)
         sSource = "v";
     else
         sSource = "i";
@@ -78,7 +84,7 @@ K2602B_Channel::setSourceValue(double dValue) {
 bool
 K2602B_Channel::setSourceRange(double dValue) {
     QString sCommand, sSource;
-    if(getSourceFunction())
+    if(getSourceFunction() == SOURCE_V)
         sSource = "v";
     else
         sSource = "i";
@@ -91,14 +97,40 @@ K2602B_Channel::setSourceRange(double dValue) {
 bool
 K2602B_Channel::setMeasureRange(double dValue) {
     QString sCommand, sSource;
-    if(getSourceFunction())
+    if(getSourceFunction() == SOURCE_V)
         sSource = "v";
-    else
+    else // SOURCE_I
         sSource = "i";
     sCommand = QString("smu%1.measure.range%2 = %3").arg(sName,sSource).arg(dValue);
-    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << dValue;
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << sName
+             << dValue;
     return pComm->send(sCommand) != LXI_ERROR;
 }
+
+
+bool
+K2602B_Channel:: setLimit(double dValue) {
+    QString sCommand, sLimit;
+    if(getSourceFunction() == SOURCE_V)
+        sLimit = "i";
+    else // SOURCE_I
+        sLimit = "v";
+    sCommand = QString("smu%1.source.limit%2 = %3").arg(sName, sLimit).arg(dValue);
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << sName
+             << dValue;
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
 
 
 QString
@@ -131,13 +163,19 @@ double
 K2602B_Channel::getSourceValue() {
     bool bOk;
     QString sCommand, sSource;
-    if(getSourceFunction())
+    if(getSourceFunction() == SOURCE_V)
         sSource = "v";
     else
         sSource = "i";
     sCommand = QString("print(smu%1.source.level%2)").arg(sName, sSource);
     double result = pComm->Query(sCommand).toDouble(&bOk);
-    qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << sName
+             << result;
     return result;
 }
 
@@ -147,7 +185,7 @@ double
 K2602B_Channel::getSourceRange() {
     bool bOk;
     QString sCommand, sSource;
-    if(getSourceFunction())
+    if(getSourceFunction() == SOURCE_V)
         sSource = "v";
     else
         sSource = "i";
@@ -162,12 +200,49 @@ double
 K2602B_Channel::getMeasureRange() {
     bool bOk;
     QString sCommand, sMeasure;
-    if(getSourceFunction())
+    if(getSourceFunction() == SOURCE_V)
         sMeasure = "i";
     else
         sMeasure = "v";
     sCommand = QString("print(smu%1.measure.range%2)").arg(sName, sMeasure);
     double result = pComm->Query(sCommand).toDouble(&bOk);
     qDebug() << __FILE__ << "Line:" << __LINE__ << __FUNCTION__ << "Channel" << sName << result;
+    return result;
+}
+
+
+double
+K2602B_Channel::getLimit() {
+    bool bOk;
+    QString sCommand, sLimit;
+    if(getSourceFunction() == SOURCE_V)
+        sLimit = "i";
+    else
+        sLimit = "v";
+    sCommand = QString("print(smu%1.source.limit%2)").arg(sName, sLimit);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << sName
+             << result;
+    return result;
+}
+
+
+bool
+K2602B_Channel::getCompliance() {
+    QString sCommand;
+    sCommand = QString("print(smu%1.source.compliance)").arg(sName);
+    bool result = pComm->Query(sCommand) == "true";
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << sName
+             << result;
     return result;
 }
