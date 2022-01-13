@@ -37,6 +37,13 @@ k2602b::k2602b(QString sK2602B_Address, QObject *parent)
 
 
 bool
+k2602b::gotoLocal() {
+    // Not Working
+    return pComm->send("display.sendkey(display.KEY_EXIT)");
+}
+
+
+bool
 k2602b::closeConnection() {
     if(!bInitialized)
         return true;

@@ -45,13 +45,15 @@ public:
     bool setMeasureRange(double dValue);
     bool setLimit(double dValue);
 
-    bool getOnOff();
-    bool getSourceFunction();
+    bool isOn();
+    bool isSourceV();
     double getSourceValue();
     double getSourceRange();
     double getMeasureRange();
     double getLimit();
     bool getCompliance();
+    double getSingleMeasure();
+    bool abort();
 
 signals:
 

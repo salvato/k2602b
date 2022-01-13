@@ -37,6 +37,7 @@ public:
 public:
     bool Init();
     bool isInitialized();
+    bool gotoLocal();
     bool closeConnection();
 
 public:

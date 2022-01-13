@@ -49,6 +49,11 @@ K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
 
     updateUi();
 
+    pReadingTimer = new QTimer();
+    connect(pReadingTimer, SIGNAL(timeout()),
+            this, SLOT(onTimeToGetMeasurement()));
+    pReadingTimer->start(1000);
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -59,6 +64,11 @@ K2602BWindow::~K2602BWindow() {
 
 void
 K2602BWindow::closeEvent(QCloseEvent*) {
+    for(int i=0; i<2; i++) {
+        pK2602B->pChannel[i]->setOnOff(false);
+        pK2602B->pChannel[i]->abort();
+    }
+    pK2602B->gotoLocal(); // <--- Not working...
     pK2602B->closeConnection();
 }
 
@@ -95,16 +105,32 @@ K2602BWindow::initMessages() {
 
 void
 K2602BWindow::updateUi() {
-    qDebug() << __FILE__
-             << "Line:"
-             << __LINE__
-             << __FUNCTION__;
+//#ifndef QT_NO_DEBUG
+//    qDebug() << __FILE__
+//             << "Line:"
+//             << __LINE__
+//             << __FUNCTION__;
+//#endif
     for(int i=0; i<2; i++) {
-        pChannelTab[i]->setOnOff_Ui(pK2602B->pChannel[i]->getOnOff());
-        pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->getSourceFunction());
+        pChannelTab[i]->setOnOff_Ui(pK2602B->pChannel[i]->isOn());
+        pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->isSourceV());
         pChannelTab[i]->setSourceValue_Ui(pK2602B->pChannel[i]->getSourceValue());
         pChannelTab[i]->setSourceRange_Ui(pK2602B->pChannel[i]->getSourceRange());
         pChannelTab[i]->setMeasureRange_Ui(pK2602B->pChannel[i]->getMeasureRange());
         pChannelTab[i]->setLimit_Ui(pK2602B->pChannel[i]->getLimit());
     }
+}
+
+
+void
+K2602BWindow::onTimeToGetMeasurement() {
+    QString sReadings = QString();
+    for(int i=0; i<2; i++) {
+        if(pK2602B->pChannel[i]->isOn()) {
+            sReadings += QString("Channel %1: %2 ")
+                           .arg(pK2602B->pChannel[i]->getName())
+                           .arg(pK2602B->pChannel[i]->getSingleMeasure());
+        }
+    }
+    pStatusBar->showMessage(sReadings, 800);
 }

@@ -99,7 +99,12 @@ CommChannel::Query(QString sCommand) {
     if(sent == LXI_ERROR)
         return QByteArray();
     QByteArray result =  receive();
-//    qDebug() << __FILE__ << "Line:" <<__LINE__ << result;
+//    qDebug() << __FILE__
+//             << "Line:"
+//             << __LINE__
+//             << __FUNCTION__
+//             << "Value="
+//             << result
     return result;
 }
 

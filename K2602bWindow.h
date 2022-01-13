@@ -27,6 +27,7 @@
 #include <QTabWidget>
 #include <QStatusBar>
 #include <QVBoxLayout>
+#include <QTimer>
 
 #include "k2602b.h"
 #include "channeltab.h"
@@ -38,6 +39,9 @@ class K2602BWindow : public QWidget
 public:
     K2602BWindow(QString sK2602B_Address, QWidget *parent=nullptr);
     ~K2602BWindow();
+
+public slots:
+    void onTimeToGetMeasurement();
 
 protected:
     void closeEvent(QCloseEvent*) Q_DECL_OVERRIDE;
@@ -54,4 +58,5 @@ private:
     ChannelTab*  pChannelTab[2];
     QStatusBar*  pStatusBar;
     QVBoxLayout* pMainLayout;
+    QTimer*      pReadingTimer;
 };
