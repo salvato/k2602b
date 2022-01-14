@@ -132,5 +132,5 @@ K2602BWindow::onTimeToGetMeasurement() {
                            .arg(pK2602B->pChannel[i]->getSingleMeasure());
         }
     }
-    pStatusBar->showMessage(sReadings, 800);
+    pStatusBar->showMessage(sReadings);
 }

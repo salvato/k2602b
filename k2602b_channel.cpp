@@ -36,6 +36,13 @@ K2602B_Channel::K2602B_Channel(QString name,
 
 
 bool
+K2602B_Channel::reset() {
+    sCommand = QString("smu%1.reset()").arg(sName);
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
 K2602B_Channel::setOnOff(bool bOn) {
 //#ifndef QT_NO_DEBUG
 //    qDebug() << __FILE__
@@ -46,7 +53,6 @@ K2602B_Channel::setOnOff(bool bOn) {
 //             << sName
 //             << bOn;
 //#endif
-    QString sCommand;
     if(bOn) {
         sCommand = QString("smu%1.source.output = smu%2.%3")
                    .arg(sName, sName, "OUTPUT_ON");
@@ -69,7 +75,6 @@ K2602B_Channel::setSourceFunction(smuFunction function) {
 //             << "Channel"
 //             << sName;
 //#endif
-    QString sCommand;
     if(function == CURRENT)
         sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCAMPS").arg(sName, sName);
     else
@@ -79,8 +84,26 @@ K2602B_Channel::setSourceFunction(smuFunction function) {
 
 
 bool
+K2602B_Channel::setAutoZero(smuAutoZero autoZero) {
+    if(autoZero == OFF) {
+        sCommand = QString("smu%1.measure.autozero = smu%1.AUTOZERO_OFF")
+                   .arg(sName);
+    }
+    else if(autoZero == ONCE) {
+        sCommand = QString("smu%1.measure.autozero = smu%1.AUTOZERO_ONCE")
+                   .arg(sName);
+    }
+    else if(autoZero == AUTO) {
+        sCommand = QString("smu%1.measure.autozero = smu%1.AUTOZERO_AUTO")
+                   .arg(sName);
+    }
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
 K2602B_Channel::setSourceValue(double dValue) {
-    QString sCommand, sSource;
+    QString sSource;
     if(isSourceV())
         sSource = "v";
     else
@@ -102,7 +125,7 @@ K2602B_Channel::setSourceValue(double dValue) {
 // Set the maximum expected voltage or current to be sourced
 bool
 K2602B_Channel::setSourceRange(double dValue) {
-    QString sCommand, sSource;
+    QString sSource;
     if(isSourceV())
         sSource = "v";
     else
@@ -123,7 +146,7 @@ K2602B_Channel::setSourceRange(double dValue) {
 
 bool
 K2602B_Channel::setMeasureRange(double dValue) {
-    QString sCommand, sSource;
+    QString sSource;
     if(isSourceV())
         sSource = "v";
     else // SOURCE_I
@@ -144,7 +167,7 @@ K2602B_Channel::setMeasureRange(double dValue) {
 
 bool
 K2602B_Channel:: setLimit(double dValue) {
-    QString sCommand, sLimit;
+    QString sLimit;
     if(isSourceV())
         sLimit = "i";
     else // SOURCE_I
@@ -162,6 +185,17 @@ K2602B_Channel:: setLimit(double dValue) {
     return pComm->send(sCommand) != LXI_ERROR;
 }
 
+
+bool
+K2602B_Channel::setSenseLocal(bool bSenseLocal) {
+    if(bSenseLocal) {
+        sCommand = QString("smu%1.sense = smu%1.SENSE_LOCAL").arg(sName);
+    }
+    else {
+        sCommand = QString("smu%1.sense = smu%1.SENSE_REMOTE").arg(sName);
+    }
+    return pComm->send(sCommand) != LXI_ERROR;
+}
 
 
 QString
@@ -209,7 +243,7 @@ K2602B_Channel::isSourceV() {
 double
 K2602B_Channel::getSourceValue() {
     bool bOk;
-    QString sCommand, sSource;
+    QString sSource;
     if(isSourceV())
         sSource = "v";
     else
@@ -233,7 +267,7 @@ K2602B_Channel::getSourceValue() {
 double
 K2602B_Channel::getSourceRange() {
     bool bOk;
-    QString sCommand, sSource;
+    QString sSource;
     if(isSourceV())
         sSource = "v";
     else
@@ -256,7 +290,7 @@ K2602B_Channel::getSourceRange() {
 double
 K2602B_Channel::getMeasureRange() {
     bool bOk;
-    QString sCommand, sMeasure;
+    QString sMeasure;
     if(isSourceV())
         sMeasure = "i";
     else
@@ -279,7 +313,7 @@ K2602B_Channel::getMeasureRange() {
 double
 K2602B_Channel::getLimit() {
     bool bOk;
-    QString sCommand, sLimit;
+    QString sLimit;
     if(isSourceV())
         sLimit = "i";
     else
@@ -301,7 +335,6 @@ K2602B_Channel::getLimit() {
 
 bool
 K2602B_Channel::getCompliance() {
-    QString sCommand;
     sCommand = QString("print(smu%1.source.compliance)").arg(sName);
     bool result = pComm->Query(sCommand) == "true";
 //#ifndef QT_NO_DEBUG
@@ -320,12 +353,12 @@ K2602B_Channel::getCompliance() {
 double
 K2602B_Channel::getSingleMeasure() {
     bool bOk;
-    QString sCommand, sRead;
+    QString sRead;
     if(isSourceV())
         sRead = "i";
     else
         sRead = "v";
-    sCommand = QString("print(smu%1.measure.%2)").arg(sName, sRead);
+    sCommand = QString("print(smu%1.measure.%2())").arg(sName, sRead);
     double result = pComm->Query(sCommand).toDouble(&bOk);
 //#ifndef QT_NO_DEBUG
 //    qDebug() << __FILE__
@@ -342,6 +375,6 @@ K2602B_Channel::getSingleMeasure() {
 
 bool
 K2602B_Channel::abort() {
-    QString sCommand = QString("smu%1.abort()").arg(sName);
+    sCommand = QString("smu%1.abort()").arg(sName);
     return pComm->send(sCommand) != LXI_ERROR;
 }

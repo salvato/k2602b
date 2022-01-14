@@ -37,13 +37,21 @@ public:
         CURRENT = 0,
         VOLTAGE
     } outputFunction;
+    typedef enum smuAutoZero {
+        OFF = 0,
+        ONCE,
+        AUTO
+    } autoZero;
     QString getName();
+    bool reset();
     bool setOnOff(bool bOn);
     bool setSourceFunction(smuFunction function);
+    bool setAutoZero(smuAutoZero autoZero);
     bool setSourceValue(double dValue);
     bool setSourceRange(double dValue);
     bool setMeasureRange(double dValue);
     bool setLimit(double dValue);
+    bool setSenseLocal(bool bSenseLocal);
 
     bool isOn();
     bool isSourceV();

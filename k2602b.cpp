@@ -38,8 +38,8 @@ k2602b::k2602b(QString sK2602B_Address, QObject *parent)
 
 bool
 k2602b::gotoLocal() {
-    // Not Working
-    return pComm->send("display.sendkey(display.KEY_EXIT)");
+    return true;
+    //return pComm->send("display.sendkey(display.KEY_EXIT)"); // Not Working
 }
 
 
@@ -57,6 +57,13 @@ k2602b::Init() {
     if(pComm->connect(sAddress)== LXI_ERROR) {
         bInitialized = false;
         return bInitialized;
+    }
+    for(int i=0; i<2; i++) {
+        pChannel[i]->reset();
+        pChannel[i]->setSenseLocal(false); // Remote Sensing
+        pChannel[i]->setAutoZero(K2602B_Channel::AUTO); // Automatically makes new reference and zero
+                                                        // measurements when the 2600B determines
+                                                        // values are out-of-date
     }
     bInitialized = true;
     return bInitialized;
