@@ -43,6 +43,15 @@ K2602B_Channel::reset() {
 
 
 bool
+K2602B_Channel::setNPLC(double nplc) {
+    if((nplc > 25.0) || (nplc < 0.001))
+        return false;
+    sCommand = QString("smu%1.measure.nplc = %2").arg(sName).arg(nplc);
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
 K2602B_Channel::setOnOff(bool bOn) {
 //#ifndef QT_NO_DEBUG
 //    qDebug() << __FILE__
@@ -237,6 +246,15 @@ K2602B_Channel::isSourceV() {
 //             << result;
 //#endif
     return result > 0.0;
+}
+
+
+double
+K2602B_Channel::getNPLC() {
+    bool bOk;
+    sCommand = QString("print(smu%1.measure.nplc)").arg(sName);
+    double result = pComm->Query(sCommand).toDouble(&bOk);
+    return result;
 }
 
 

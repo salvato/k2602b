@@ -45,6 +45,7 @@ public:
     void setSourceRange_Ui(double dValue);
     void setMeasureRange_Ui(double dValue);
     void setLimit_Ui(double dValue);
+    void setNPLC_Ui(double nplc);
 
 protected:
     void saveSettings();
@@ -58,14 +59,19 @@ public slots:
     void onSourceValueEditingFinished();
     void onMeasureRangeEditingFinished();
     void onMeasureLimitEditingFinished();
+    void onNPLCEditTextChanged(const QString &arg1);
+    void onNPLCEditingFinished();
 
     void onSourceRangeChangedUi(int selectedItem);
     void onSourceModeChangedUi(int selectedItem);
     void onMeasureModeChangedUi(int selectedItem);
     void onOnOffChangedUi(int);
 
-
 private:
+    // QLineEdit styles
+    QString sNormalStyle;
+    QString sErrorStyle;
+
     K2602B_Channel* pChannel;
 
     QComboBox* pSourceMode;
@@ -81,6 +87,9 @@ private:
     QLineEdit* pMeasureRangeEdit;
     QLabel*    pMeasureLimitLabel;
     QLineEdit* pMeasureLimitEdit;
+
+    QLabel*    pMeasureNPLCLabel;
+    QLineEdit* pMeasureNPLCEdit;
 
     QLabel*    pOnOffLabel;
     QCheckBox* pOnOffButton;

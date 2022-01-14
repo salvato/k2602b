@@ -45,8 +45,8 @@ K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
     pStatusBar = new QStatusBar();
 
     restoreSettings();
-    initLayout();
 
+    initLayout();
     updateUi();
 
     pReadingTimer = new QTimer();
@@ -118,6 +118,7 @@ K2602BWindow::updateUi() {
         pChannelTab[i]->setSourceRange_Ui(pK2602B->pChannel[i]->getSourceRange());
         pChannelTab[i]->setMeasureRange_Ui(pK2602B->pChannel[i]->getMeasureRange());
         pChannelTab[i]->setLimit_Ui(pK2602B->pChannel[i]->getLimit());
+        pChannelTab[i]->setNPLC_Ui(pK2602B->pChannel[i]->getNPLC());
     }
 }
 

@@ -45,6 +45,7 @@ public:
     QString getName();
     bool reset();
     bool setOnOff(bool bOn);
+    bool setNPLC(double nplc);
     bool setSourceFunction(smuFunction function);
     bool setAutoZero(smuAutoZero autoZero);
     bool setSourceValue(double dValue);
@@ -54,6 +55,7 @@ public:
     bool setSenseLocal(bool bSenseLocal);
 
     bool isOn();
+    double getNPLC();
     bool isSourceV();
     double getSourceValue();
     double getSourceRange();

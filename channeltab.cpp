@@ -68,6 +68,12 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
     pMeasureLimitEdit->setMaximumWidth(120);
     pMeasureLimitEdit->setAlignment(Qt::AlignRight);
 
+    pMeasureNPLCLabel = new QLabel("NPLC");
+    pMeasureNPLCLabel->setMaximumWidth(120);
+    pMeasureNPLCEdit = new QLineEdit("0");
+    pMeasureNPLCEdit->setMaximumWidth(120);
+    pMeasureNPLCEdit->setAlignment(Qt::AlignRight);
+
     pComplianceButton = new QCheckBox("Compliance");
     pComplianceButton->setLayoutDirection(Qt::RightToLeft);
     pComplianceButton->setMaximumWidth(120);
@@ -94,10 +100,20 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
     pLayout->addWidget(pMeasureLimitLabel,  1, 4, 1, 1, Qt::AlignRight);
     pLayout->addWidget(pMeasureLimitEdit,   1, 5, 1, 1);
 
-    pLayout->addWidget(pComplianceButton,   2, 0, 1, 1);
+    pLayout->addWidget(pMeasureNPLCLabel,   2, 0, 1, 1, Qt::AlignRight);
+    pLayout->addWidget(pMeasureNPLCEdit,    2, 1, 1, 1);
 
-    pLayout->addWidget(pOnOffLabel,         2, 4, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pOnOffButton,        2, 5, 1, 1);
+    pLayout->addWidget(pComplianceButton,   3, 0, 1, 1);
+    pLayout->addWidget(pOnOffLabel,         3, 4, 1, 1, Qt::AlignRight);
+    pLayout->addWidget(pOnOffButton,        3, 5, 1, 1);
+
+    sNormalStyle = pMeasureNPLCEdit->styleSheet();
+
+    sErrorStyle  = "QLineEdit { ";
+    sErrorStyle += "color: rgb(255, 255, 255);";
+    sErrorStyle += "background: rgb(255, 0, 0);";
+    sErrorStyle += "selection-background-color: rgb(128, 128, 255);";
+    sErrorStyle += "}";
 
     setLayout(pLayout);
     InitSignals();
@@ -134,6 +150,41 @@ ChannelTab::InitSignals() {
             this, SLOT(onMeasureRangeEditingFinished()));
     connect(pMeasureLimitEdit, SIGNAL(editingFinished()),
             this, SLOT(onMeasureLimitEditingFinished()));
+
+    connect(pMeasureNPLCEdit, SIGNAL(textChanged(QString)),
+            this, SLOT(onNPLCEditTextChanged(QString)));
+    connect(pMeasureNPLCEdit, SIGNAL(editingFinished()),
+            this, SLOT(onNPLCEditingFinished()));
+}
+
+
+void
+ChannelTab::onNPLCEditTextChanged(const QString &arg1) {
+    double value = arg1.toDouble();
+    if((value < 0.001) || (value > 25.0)) {
+        pMeasureNPLCEdit->setStyleSheet(sErrorStyle);
+    }
+    else {
+        pMeasureNPLCEdit->setStyleSheet(sNormalStyle);
+    }
+}
+
+
+void
+ChannelTab::onNPLCEditingFinished() {
+    double dValue = pMeasureNPLCEdit->text().toDouble();
+    pChannel->setNPLC(dValue);
+    pMeasureNPLCEdit->setText(QString("%1").arg(pChannel->getNPLC()));
+//#ifndef QT_NO_DEBUG
+//    qDebug() << __FILE__
+//             << "Line:"
+//             << __LINE__
+//             << __FUNCTION__
+//             << "Channel"
+//             << pChannel->getName()
+//             << "NPLC"
+//             << dValue;
+//#endif
 }
 
 
@@ -376,4 +427,19 @@ ChannelTab::setOnOff_Ui(bool bOn) {
 //             << bOn;
 //#endif
     pOnOffButton->setChecked(bOn);
+}
+
+
+void
+ChannelTab::setNPLC_Ui(double nplc) {
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << nplc;
+#endif
+    pMeasureNPLCEdit->setText(QString("%1").arg(nplc));
 }

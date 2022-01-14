@@ -64,6 +64,7 @@ k2602b::Init() {
         pChannel[i]->setAutoZero(K2602B_Channel::AUTO); // Automatically makes new reference and zero
                                                         // measurements when the 2600B determines
                                                         // values are out-of-date
+        pChannel[i]->setNPLC(25);
     }
     bInitialized = true;
     return bInitialized;

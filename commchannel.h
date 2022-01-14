@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QMutex>
 #include <lxi.h>
 
 
@@ -51,8 +52,10 @@ public:
 signals:
 
 private:
+    QMutex mutex;
     int mySessionId;
     int timeout;
     bool bConnected;
     int errorCode;
+    char buf[1025];
 };
