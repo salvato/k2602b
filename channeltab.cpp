@@ -175,30 +175,30 @@ ChannelTab::onNPLCEditingFinished() {
     double dValue = pMeasureNPLCEdit->text().toDouble();
     pChannel->setNPLC(dValue);
     pMeasureNPLCEdit->setText(QString("%1").arg(pChannel->getNPLC()));
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName()
-//             << "NPLC"
-//             << dValue;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << "NPLC"
+             << dValue;
+#endif
 }
 
 
 void
 ChannelTab::onSourceModeChangedUi(int selectedItem) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName()
-//             << selectedItem;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << selectedItem;
+#endif
     pMeasureMode->setCurrentIndex(1-selectedItem);
     QString sValue = pSourceMode->itemText(selectedItem);
     bool bResult;
@@ -214,15 +214,15 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
 
 void
 ChannelTab::onMeasureModeChangedUi(int selectedItem) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName()
-//             << selectedItem;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << selectedItem;
+#endif
     pSourceMode->setCurrentIndex(1-selectedItem);
     QString sValue = pMeasureMode->itemText(selectedItem);
     bool bResult;
@@ -238,15 +238,15 @@ ChannelTab::onMeasureModeChangedUi(int selectedItem) {
 
 void
 ChannelTab::onSourceRangeChangedUi(int selectedItem) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName()
-//             << selectedItem;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << selectedItem;
+#endif
     QString sValue = pSourceRangeCombo->itemText(selectedItem);
     if(sValue == "AUTO") {
         pSourceRangeEdit->setDisabled(true);
@@ -260,30 +260,28 @@ ChannelTab::onSourceRangeChangedUi(int selectedItem) {
 void
 ChannelTab::onOnOffChangedUi(int) {
     pChannel->setOnOff(pOnOffButton->isChecked());
-    bool bResult = pChannel->isOn();
-    pOnOffButton->setChecked(bResult);
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName()
-//             << bResult;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << (pOnOffButton->isChecked() ? "On" : "Off");
+#endif
 }
 
 
 void
 ChannelTab::setSourceMode_Ui(bool bSourceV) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     if(bSourceV) {
         pMeasureMode->setCurrentIndex(0);
         pSourceMode->setCurrentIndex(1);
@@ -297,70 +295,70 @@ ChannelTab::setSourceMode_Ui(bool bSourceV) {
 
 void
 ChannelTab::setSourceValue_Ui(double dValue) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     pSourceValueEdit->setText(QString("%1").arg(dValue));
 }
 
 
 void
 ChannelTab::setSourceRange_Ui(double dValue) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     pSourceRangeEdit->setText(QString("%1").arg(dValue));
 }
 
 
 void
 ChannelTab::setMeasureRange_Ui(double dValue) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     pMeasureRangeEdit->setText(QString("%1").arg(dValue));
 }
 
 
 void
 ChannelTab::setLimit_Ui(double dValue) {
-////#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     pMeasureLimitEdit->setText(QString("%1").arg(dValue));
 }
 
 
 void
 ChannelTab::onSourceValueEditingFinished() {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     double dValue = pSourceValueEdit->text().toDouble();
     pChannel->setSourceValue(dValue);
     pSourceValueEdit->setText(QString("%1").arg(pChannel->getSourceValue()));
@@ -369,14 +367,14 @@ ChannelTab::onSourceValueEditingFinished() {
 
 void
 ChannelTab::onSourceRangeEditingFinished() {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     double dValue = pSourceRangeEdit->text().toDouble();
     pChannel->setSourceRange(dValue);
     pSourceRangeEdit->setText(QString("%1").arg(pChannel->getSourceRange()));
@@ -385,14 +383,14 @@ ChannelTab::onSourceRangeEditingFinished() {
 
 void
 ChannelTab::onMeasureRangeEditingFinished() {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     double dValue = pMeasureRangeEdit->text().toDouble();
     pChannel->setMeasureRange(dValue);
     pMeasureRangeEdit->setText(QString("%1").arg(pChannel->getSourceRange()));
@@ -401,14 +399,14 @@ ChannelTab::onMeasureRangeEditingFinished() {
 
 void
 ChannelTab::onMeasureLimitEditingFinished() {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName();
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName();
+#endif
     double dValue = pMeasureLimitEdit->text().toDouble();
     pChannel->setLimit(dValue);
     pMeasureLimitEdit->setText(QString("%1").arg(pChannel->getLimit()));
@@ -417,15 +415,15 @@ ChannelTab::onMeasureLimitEditingFinished() {
 
 void
 ChannelTab::setOnOff_Ui(bool bOn) {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Channel"
-//             << pChannel->getName()
-//             << bOn;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << bOn;
+#endif
     pOnOffButton->setChecked(bOn);
 }
 

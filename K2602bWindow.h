@@ -27,7 +27,7 @@
 #include <QTabWidget>
 #include <QStatusBar>
 #include <QVBoxLayout>
-#include <QTimer>
+//#include <QTimer>
 
 #include "k2602b.h"
 #include "channeltab.h"
@@ -41,7 +41,7 @@ public:
     ~K2602BWindow();
 
 public slots:
-    void onTimeToGetMeasurement();
+    //void onTimeToGetMeasurement();
 
 protected:
     void closeEvent(QCloseEvent*) Q_DECL_OVERRIDE;
@@ -58,5 +58,5 @@ private:
     ChannelTab*  pChannelTab[2];
     QStatusBar*  pStatusBar;
     QVBoxLayout* pMainLayout;
-    QTimer*      pReadingTimer;
+    //QTimer*      pReadingTimer;
 };

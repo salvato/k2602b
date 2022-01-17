@@ -33,15 +33,21 @@ QStringList addresses;
 
 void
 broadcast(const char *address, const char *interface) {
+    Q_UNUSED(address)
+    Q_UNUSED(interface)
+#ifndef QT_NO_DEBUG
     qDebug() << QString("Broadcasting on interface %1 at Address: %2")
                 .arg(interface, address);
+#endif
 }
 
 
 void
 device(const char *address, const char *id) {
+#ifndef QT_NO_DEBUG
     qDebug() << QString(" Found %1 on address %2")
                 .arg(id, address);
+#endif
     connectedDevices.append(id);
     addresses.append(address);
 }
@@ -64,14 +70,18 @@ main(int argc, char *argv[]) {
     info.broadcast = &broadcast;
     info.device    = &device;
 
+#ifndef QT_NO_DEBUG
     qDebug() << "Searching for LXI devices - please wait...";
+#endif
     QString sK2602Baddress = QString();
 
     // Search for LXI devices, 1 second timeout
     lxi_discover(&info, 1000, DISCOVER_VXI11);
     bool bFound = false;
     for(int i=0; i<connectedDevices.size(); i++) {
+#ifndef QT_NO_DEBUG
         qDebug() << connectedDevices.at(i);
+#endif
         if(connectedDevices.at(i).contains("2602B")) {
             sK2602Baddress = addresses.at(i);
             bFound = true;

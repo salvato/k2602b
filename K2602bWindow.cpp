@@ -49,10 +49,18 @@ K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
     initLayout();
     updateUi();
 
-    pReadingTimer = new QTimer();
-    connect(pReadingTimer, SIGNAL(timeout()),
-            this, SLOT(onTimeToGetMeasurement()));
-    pReadingTimer->start(1000);
+//    pReadingTimer = new QTimer();
+//    connect(pReadingTimer, SIGNAL(timeout()),
+//            this, SLOT(onTimeToGetMeasurement()));
+
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Starting periodic Sampler";
+#endif
+//    pReadingTimer->start(3000);
 
     QApplication::restoreOverrideCursor();
 }
@@ -85,6 +93,12 @@ K2602BWindow::restoreSettings() {
 
 void
 K2602BWindow::initLayout() {
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__;
+#endif
     pTabWidget->addTab(pChannelTab[0], "Channel A");
     pTabWidget->addTab(pChannelTab[1], "Channel B");
 
@@ -105,12 +119,12 @@ K2602BWindow::initMessages() {
 
 void
 K2602BWindow::updateUi() {
-//#ifndef QT_NO_DEBUG
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__;
-//#endif
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__;
+#endif
     for(int i=0; i<2; i++) {
         pChannelTab[i]->setOnOff_Ui(pK2602B->pChannel[i]->isOn());
         pChannelTab[i]->setSourceMode_Ui(pK2602B->pChannel[i]->isSourceV());
@@ -123,15 +137,23 @@ K2602BWindow::updateUi() {
 }
 
 
-void
-K2602BWindow::onTimeToGetMeasurement() {
-    QString sReadings = QString();
-    for(int i=0; i<2; i++) {
-        if(pK2602B->pChannel[i]->isOn()) {
-            sReadings += QString("Channel %1: %2 ")
-                           .arg(pK2602B->pChannel[i]->getName())
-                           .arg(pK2602B->pChannel[i]->getSingleMeasure());
-        }
-    }
-    pStatusBar->showMessage(sReadings);
-}
+/* void K2602BWindow::onTimeToGetMeasurement()
+//void
+//K2602BWindow::onTimeToGetMeasurement() {
+//#ifndef QT_NO_DEBUG
+//    qDebug() << __FILE__
+//             << "Line:"
+//             << __LINE__
+//             << __FUNCTION__;
+//#endif
+//    QString sReadings = QString();
+//    for(int i=0; i<2; i++) {
+//        if(pK2602B->pChannel[i]->isOn()) {
+//            sReadings += QString("Channel %1: %2 ")
+//                           .arg(pK2602B->pChannel[i]->getName())
+//                           .arg(pK2602B->pChannel[i]->getSingleMeasure());
+//        }
+//    }
+//    pStatusBar->showMessage(sReadings);
+//}
+*/

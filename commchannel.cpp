@@ -35,6 +35,7 @@ CommChannel::CommChannel(QObject *parent)
 
 int
 CommChannel::connect(QString address) {
+    QMutexLocker locker(&mutex);
     errorCode = NO_ERROR;
     mySessionId = lxi_connect(address.toLocal8Bit().data(),
                               0,
@@ -51,21 +52,24 @@ CommChannel::connect(QString address) {
 
 int
 CommChannel::send(QString message) {
+#ifndef QT_NO_DEBUG
     qDebug() << __FILE__
              << "Line:"
              << __LINE__
-             << __FUNCTION__;
+             << __FUNCTION__
+             << "Message:"
+             << message;
+#endif
+    QMutexLocker locker(&mutex);
     errorCode = NO_ERROR;
     if(!bConnected) {
         errorCode = NO_CONNECTION_ERROR;
         return LXI_ERROR;
     }
-    mutex.lock();
     int result = lxi_send(mySessionId,
                           message.toLocal8Bit().data(),
                           message.length(),
                           timeout);
-    mutex.unlock();
     if(result != message.length()) {
         errorCode = SEND_ERROR;
     }
@@ -75,32 +79,35 @@ CommChannel::send(QString message) {
 
 QByteArray
 CommChannel::receive() {
-    qDebug() << __FILE__
-             << "Line:"
-             << __LINE__
-             << __FUNCTION__;
+    QMutexLocker locker(&mutex);
     if(!bConnected) {
         errorCode = NO_CONNECTION_ERROR;
         return QByteArray();
     }
-    char buf[1025];
-    mutex.lock();
     int result = lxi_receive(mySessionId,
                              buf,
                              sizeof(buf)-1,
                              timeout);
-    mutex.unlock();
     if(result == LXI_ERROR) {
         errorCode = RECEIVE_ERROR;
         return QByteArray();
     }
     buf[result] = 0;
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Value="
+             << buf;
+#endif
     return QByteArray(buf);
 }
 
 
 int
 CommChannel::closeConnection() {
+    QMutexLocker locker(&mutex);
     if(!bConnected)
         return LXI_ERROR;
     int result = lxi_disconnect(mySessionId);
@@ -110,40 +117,37 @@ CommChannel::closeConnection() {
 
 QByteArray
 CommChannel::Query(QString sCommand) {
-    qDebug() << __FILE__
-             << "Line:"
-             << __LINE__
-             << __FUNCTION__;
+    QMutexLocker locker(&mutex);
     if(!bConnected) {
         errorCode = NO_CONNECTION_ERROR;
         return QByteArray();
     }
-    mutex.lock();
     int sent = lxi_send(mySessionId,
                         sCommand.toLocal8Bit().data(),
                         sCommand.length(),
                         timeout);
-
     if(sent == LXI_ERROR) {
-        mutex.unlock();
         return QByteArray();
     }
-    sent = lxi_receive(mySessionId,
-                       buf,
-                       sizeof(buf)-1,
-                       timeout);
-    mutex.unlock();
-    if(sent == LXI_ERROR) {
+
+    int rcvd = lxi_receive(mySessionId,
+                           buf,
+                           sizeof(buf)-1,
+                           timeout);
+    if(rcvd == LXI_ERROR) {
         errorCode = RECEIVE_ERROR;
         return QByteArray();
     }
-    buf[sent] = 0;
-//    qDebug() << __FILE__
-//             << "Line:"
-//             << __LINE__
-//             << __FUNCTION__
-//             << "Value="
-//             << buf
+    buf[rcvd] = 0;
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "(" + sCommand + ")"
+             << "Value="
+             << buf;
+#endif
     return QByteArray(buf);
 }
 
