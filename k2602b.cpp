@@ -58,6 +58,7 @@ k2602b::Init() {
         bInitialized = false;
         return bInitialized;
     }
+    pComm->send(QString("status.reset()"));
     for(int i=0; i<2; i++) {
         pChannel[i]->reset();
         pChannel[i]->setSenseLocal(false); // Remote Sensing

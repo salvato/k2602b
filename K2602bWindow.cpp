@@ -24,6 +24,7 @@
 #include "K2602bWindow.h"
 
 #include <QApplication>
+#include <QSettings>
 
 
 K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
@@ -52,14 +53,13 @@ K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
 //    pReadingTimer = new QTimer();
 //    connect(pReadingTimer, SIGNAL(timeout()),
 //            this, SLOT(onTimeToGetMeasurement()));
-
-#ifndef QT_NO_DEBUG
-    qDebug() << __FILE__
-             << "Line:"
-             << __LINE__
-             << __FUNCTION__
-             << "Starting periodic Sampler";
-#endif
+//#ifndef QT_NO_DEBUG
+//    qDebug() << __FILE__
+//             << "Line:"
+//             << __LINE__
+//             << __FUNCTION__
+//             << "Starting periodic Sampler";
+//#endif
 //    pReadingTimer->start(3000);
 
     QApplication::restoreOverrideCursor();
@@ -67,27 +67,41 @@ K2602BWindow::K2602BWindow(QString sK2602B_Address, QWidget *parent)
 
 
 K2602BWindow::~K2602BWindow() {
-}
-
-
-void
-K2602BWindow::closeEvent(QCloseEvent*) {
     for(int i=0; i<2; i++) {
         pK2602B->pChannel[i]->setOnOff(false);
         pK2602B->pChannel[i]->abort();
     }
     pK2602B->gotoLocal(); // <--- Not working...
     pK2602B->closeConnection();
+    saveSettings();
+}
+
+
+void
+K2602BWindow::closeEvent(QCloseEvent* event) {
+    for(int i=0; i<2; i++) {
+        pK2602B->pChannel[i]->setOnOff(false);
+        pK2602B->pChannel[i]->abort();
+    }
+    pK2602B->gotoLocal(); // <--- Not working...
+    pK2602B->closeConnection();
+    saveSettings();
+    QWidget::closeEvent(event);
 }
 
 
 void
 K2602BWindow::saveSettings() {
+    QSettings settings;
+    settings.setValue("K2602BWindowGeometry", saveGeometry());
 }
 
 
 void
 K2602BWindow::restoreSettings() {
+    // Restore Geometry and State of the window
+    QSettings settings;
+    restoreGeometry(settings.value("K2602BWindowGeometry").toByteArray());
 }
 
 

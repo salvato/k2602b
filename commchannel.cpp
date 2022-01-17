@@ -111,6 +111,7 @@ CommChannel::closeConnection() {
     if(!bConnected)
         return LXI_ERROR;
     int result = lxi_disconnect(mySessionId);
+    bConnected = false;
     return result;
 }
 

@@ -23,29 +23,29 @@
 
 QT += core
 QT += gui
+QT += widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
 
-SOURCES += \
-    channeltab.cpp \
-    commchannel.cpp \
-    k2602b.cpp \
-    k2602b_channel.cpp \
-    main.cpp \
-    K2602bWindow.cpp
+SOURCES += main.cpp
+SOURCES += channeltab.cpp
+SOURCES += commchannel.cpp
+SOURCES += k2602b.cpp
+SOURCES += k2602b_channel.cpp
+SOURCES += K2602bWindow.cpp
 
-HEADERS += \
-    K2602bWindow.h \
-    channeltab.h \
-    commchannel.h \
-    k2602b.h \
-    k2602b_channel.h
 
-LIBS += \
-    -llxi
+HEADERS += K2602bWindow.h
+HEADERS += channeltab.h
+HEADERS += commchannel.h
+HEADERS += k2602b.h
+HEADERS += k2602b_channel.h
+
+
+LIBS += -llxi
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

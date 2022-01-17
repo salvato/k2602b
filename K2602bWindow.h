@@ -44,7 +44,7 @@ public slots:
     //void onTimeToGetMeasurement();
 
 protected:
-    void closeEvent(QCloseEvent*) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent*event) Q_DECL_OVERRIDE;
     void saveSettings();
     void restoreSettings();
     void initLayout();
@@ -52,7 +52,7 @@ protected:
     void updateUi();
 
 private:
-    QString sAddress;
+    QString      sAddress;
     k2602b*      pK2602B;
     QTabWidget*  pTabWidget;
     ChannelTab*  pChannelTab[2];

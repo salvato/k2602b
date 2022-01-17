@@ -22,9 +22,9 @@
 */
 
 #include "K2602bWindow.h"
-#include <lxi.h>
 #include <QApplication>
 #include <QDebug>
+#include <lxi.h>
 
 
 QStringList connectedDevices;
@@ -36,7 +36,7 @@ broadcast(const char *address, const char *interface) {
     Q_UNUSED(address)
     Q_UNUSED(interface)
 #ifndef QT_NO_DEBUG
-    qDebug() << QString("Broadcasting on interface %1 at Address: %2")
+    qDebug() << QString(" Broadcasting on interface %1 at Address: %2")
                 .arg(interface, address);
 #endif
 }
@@ -50,6 +50,19 @@ device(const char *address, const char *id) {
 #endif
     connectedDevices.append(id);
     addresses.append(address);
+}
+
+
+void
+service(const char *address, const char *id, const char *service, int port) {
+    Q_UNUSED(address)
+    Q_UNUSED(id)
+    Q_UNUSED(service)
+    Q_UNUSED(port)
+#ifndef QT_NO_DEBUG
+    qDebug() << QString(" Service %1 form %2 on address %3")
+                .arg(service, id, address);
+#endif
 }
 
 
@@ -69,13 +82,15 @@ main(int argc, char *argv[]) {
     // Set up search information callbacks
     info.broadcast = &broadcast;
     info.device    = &device;
+    info.service   = &service;
+
 
 #ifndef QT_NO_DEBUG
     qDebug() << "Searching for LXI devices - please wait...";
 #endif
-    QString sK2602Baddress = QString();
 
-    // Search for LXI devices, 1 second timeout
+    QString sK2602Baddress = QString();
+    // Search for LXI devices, 1000 milliseconds timeout
     lxi_discover(&info, 1000, DISCOVER_VXI11);
     bool bFound = false;
     for(int i=0; i<connectedDevices.size(); i++) {
