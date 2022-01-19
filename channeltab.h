@@ -48,9 +48,12 @@ public:
     void setNPLC_Ui(double nplc);
 
 protected:
+    void closeEvent(QCloseEvent*event) Q_DECL_OVERRIDE;
     void saveSettings();
     void restoreSettings();
+    void InitLayout();
     void InitSignals();
+    void CreateUiElements();
 
 signals:
 
@@ -65,6 +68,7 @@ public slots:
     void onSourceRangeChangedUi(int selectedItem);
     void onSourceModeChangedUi(int selectedItem);
     void onMeasureModeChangedUi(int selectedItem);
+    void onMeasureRangeChangedUi(int selectedItem);
     void onOnOffChangedUi(int);
 
 private:
@@ -74,18 +78,24 @@ private:
 
     K2602B_Channel* pChannel;
 
-    QComboBox* pSourceMode;
+    QLabel*    pSourceModeLabel;
     QLabel*    pSourceRangeLabel;
+    QLabel*    pSourceValueLabel;
+    QLabel*    pSourceStartLabel;
+    QLabel*    pSourceStopLabel;
+
+    QLabel*    pMeasureModeLabel;
+    QLabel*    pMeasureRangeLabel;
+    QLabel*    pMeasureLimitLabel;
+
+    QComboBox* pSourceModeCombo;
     QComboBox* pSourceRangeCombo;
     QLineEdit* pSourceRangeEdit;
-    QLabel*    pSourceValueLabel;
     QLineEdit* pSourceValueEdit;
 
-    QComboBox* pMeasureMode;
-    QLabel*    pMeasureRangeLabel;
+    QComboBox* pMeasureModeCombo;
     QComboBox* pMeasureRangeCombo;
     QLineEdit* pMeasureRangeEdit;
-    QLabel*    pMeasureLimitLabel;
     QLineEdit* pMeasureLimitEdit;
 
     QLabel*    pMeasureNPLCLabel;

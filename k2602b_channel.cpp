@@ -149,6 +149,26 @@ K2602B_Channel::setSourceValue(double dValue) {
 }
 
 
+bool
+K2602B_Channel::setSourceAutoRange(bool bAuto) {
+    QString sMeasure;
+    if(isSourceV())
+        sMeasure = "v";
+    else // SOURCE_I
+        sMeasure = "i";
+
+    if(bAuto) {
+        sCommand = QString("smu%1.source.autorange%2 = smu%1.AUTORANGE_ON")
+                   .arg(sName, sMeasure);
+    }
+    else {
+        sCommand = QString("smu%1.source.autorange%2 = smu%1.AUTORANGE_OFF")
+                   .arg(sName, sMeasure);
+    }
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
 // Set the maximum expected voltage or current to be sourced
 bool
 K2602B_Channel::setSourceRange(double dValue) {
@@ -167,6 +187,26 @@ K2602B_Channel::setSourceRange(double dValue) {
              << sName
              << dValue;
 #endif
+    return pComm->send(sCommand) != LXI_ERROR;
+}
+
+
+bool
+K2602B_Channel::setMeasureAutoRange(bool bAuto) {
+    QString sMeasure;
+    if(isSourceV())
+        sMeasure = "i";
+    else // SOURCE_I
+        sMeasure = "v";
+
+    if(bAuto) {
+        sCommand = QString("smu%1.measure.autorange%2 = smu%1.AUTORANGE_ON")
+                   .arg(sName, sMeasure);
+    }
+    else {
+        sCommand = QString("smu%1.measure.autorange%2 = smu%1.AUTORANGE_OFF")
+                   .arg(sName, sMeasure);
+    }
     return pComm->send(sCommand) != LXI_ERROR;
 }
 

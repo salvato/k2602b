@@ -50,7 +50,9 @@ public:
     bool setAutoZero(smuAutoZero autoZero);
     bool setSourceValue(double dValue);
     bool setSourceRange(double dValue);
+    bool setSourceAutoRange(bool bAuto);
     bool setMeasureRange(double dValue);
+    bool setMeasureAutoRange(bool bAuto);
     bool setLimit(double dValue);
     bool setSenseLocal(bool bSenseLocal);
 

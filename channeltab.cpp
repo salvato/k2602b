@@ -30,94 +30,142 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
     : QWidget(parent)
     , pChannel(pCh)
 {
-    pSourceMode = new QComboBox();
-    pSourceMode->addItems(QStringList(QList<QString>{"Source I",
-                                                     "Source V"}));
-    pSourceRangeLabel  = new QLabel("Range");
-    pSourceRangeLabel->setMaximumWidth(120);
+    CreateUiElements();
+    InitLayout();
+    restoreSettings();
+    InitSignals();
+}
+
+
+void
+ChannelTab::closeEvent(QCloseEvent*event) {
+    saveSettings();
+    QWidget::closeEvent(event);
+}
+
+
+void
+ChannelTab::CreateUiElements() {
+    // Labels
+    pSourceModeLabel   = new QLabel("Source Mode");
+    pSourceRangeLabel  = new QLabel("Source Range");
+    pSourceValueLabel  = new QLabel("Source Value");
+    pSourceStartLabel  = new QLabel("Source Start");
+    pSourceStopLabel   = new QLabel("Source Stop");
+    pMeasureModeLabel  = new QLabel("Measure Mode");
+    pMeasureRangeLabel = new QLabel("Measure Range");
+    pMeasureLimitLabel = new QLabel("Measure Limit");
+    pMeasureNPLCLabel  = new QLabel("NPLC");
+    pOnOffLabel        = new QLabel("Output");
+    // ComboBoxes
+    pSourceModeCombo   = new QComboBox();
     pSourceRangeCombo  = new QComboBox();
-    pSourceRangeCombo->addItems(QStringList(QList<QString>{"AUTO",
-                                                           "MANUAL"}));
-    pSourceRangeCombo->setMaximumWidth(120);
-    pSourceRangeEdit = new QLineEdit("0.0");
-    pSourceRangeEdit->setAlignment(Qt::AlignRight);
-    pSourceRangeEdit->setMaximumWidth(120);
-
-    pSourceValueLabel = new QLabel("Value");
-    pSourceValueLabel->setMaximumWidth(120);
-    pSourceValueEdit = new QLineEdit("0.0");
-    pSourceValueEdit->setMaximumWidth(120);
-    pSourceValueEdit->setAlignment(Qt::AlignRight);
-
-    pMeasureMode = new QComboBox();
-    pMeasureMode->addItems(QStringList(QList<QString>{"Measure I",
-                                                      "Measure V"}));
-    pMeasureRangeLabel  = new QLabel("Range");
-    pMeasureRangeLabel->setMaximumWidth(120);
-    pMeasureRangeCombo  = new QComboBox();
-    pMeasureRangeCombo->addItems(QStringList(QList<QString>{"AUTO",
-                                                            "MANUAL"}));
-    pMeasureRangeCombo->setMaximumWidth(120);
-    pMeasureRangeEdit = new QLineEdit("0.0");
-    pMeasureRangeEdit->setAlignment(Qt::AlignRight);
-    pMeasureRangeEdit->setMaximumWidth(120);
-
-    pMeasureLimitLabel = new QLabel("Limit");
-    pMeasureLimitLabel->setMaximumWidth(120);
-    pMeasureLimitEdit = new QLineEdit("0.0");
-    pMeasureLimitEdit->setMaximumWidth(120);
-    pMeasureLimitEdit->setAlignment(Qt::AlignRight);
-
-    pMeasureNPLCLabel = new QLabel("NPLC");
-    pMeasureNPLCLabel->setMaximumWidth(120);
-    pMeasureNPLCEdit = new QLineEdit("0");
-    pMeasureNPLCEdit->setMaximumWidth(120);
-    pMeasureNPLCEdit->setAlignment(Qt::AlignRight);
-
-    pComplianceButton = new QCheckBox("Compliance");
+    pMeasureModeCombo  = new QComboBox();
+    pMeasureRangeCombo = new QComboBox();
+    // LineEdits
+    pSourceRangeEdit   = new QLineEdit("0.0");
+    pSourceValueEdit   = new QLineEdit("0.0");
+    pMeasureRangeEdit  = new QLineEdit("0.0");
+    pMeasureLimitEdit  = new QLineEdit("0.0");
+    pMeasureNPLCEdit   = new QLineEdit("0");
+    // CheckBoxes
+    pComplianceButton  = new QCheckBox("Compliance");
+    pOnOffButton       = new QCheckBox("On/Off");
+    // ComboBoxes Initialization
+    pSourceModeCombo->addItems(QStringList(QList<QString>{
+                                               "Source I",
+                                               "Source V",
+                                               "Dc Sweep V",
+                                               "Dc Sweep I",
+                                               "Pulsed Swp V",
+                                               "Pulsed Swp I"}));
+    pSourceRangeCombo->addItems(QStringList(QList<QString>{
+                                                "AUTO",
+                                                "MANUAL"}));
+    pMeasureModeCombo->addItems(QStringList(QList<QString>{
+                                                "Measure I",
+                                                "Measure V"}));
+    pMeasureRangeCombo->addItems(QStringList(QList<QString>{
+                                                 "AUTO",
+                                                 "MANUAL"}));
+    // Ui Elements Attributes
     pComplianceButton->setLayoutDirection(Qt::RightToLeft);
-    pComplianceButton->setMaximumWidth(120);
     pComplianceButton->setAttribute(Qt::WA_TransparentForMouseEvents);
     pComplianceButton->setFocusPolicy(Qt::NoFocus);
+    //
+    pSourceRangeEdit->setAlignment(Qt::AlignRight);
+    pSourceValueEdit->setAlignment(Qt::AlignRight);
+    pMeasureRangeEdit->setAlignment(Qt::AlignRight);
+    pMeasureLimitEdit->setAlignment(Qt::AlignRight);
+    pMeasureNPLCEdit->setAlignment(Qt::AlignRight);
+    //
+    pSourceModeLabel->setMaximumWidth(120);
+    pSourceRangeLabel->setMaximumWidth(120);
+    pSourceValueLabel->setMaximumWidth(120);
+    pSourceStartLabel->setMaximumWidth(120);
+    pSourceStopLabel->setMaximumWidth(120);
+    pSourceModeCombo->setMaximumWidth(120);
+    pSourceRangeCombo->setMaximumWidth(120);
+    pSourceRangeEdit->setMaximumWidth(120);
+    pSourceValueEdit->setMaximumWidth(120);
+    pMeasureNPLCLabel->setMaximumWidth(120);
+    pMeasureNPLCEdit->setMaximumWidth(120);
+    pMeasureModeCombo->setMaximumWidth(120);
+    pMeasureRangeCombo->setMaximumWidth(120);
+    pMeasureRangeEdit->setMaximumWidth(120);
+    pMeasureLimitEdit->setMaximumWidth(120);
+}
 
-    pOnOffLabel = new QLabel("Output");
-    pOnOffLabel->setMaximumWidth(120);
-    pOnOffButton = new QCheckBox("On/Off");
 
-    QGridLayout* pLayout = new QGridLayout();
-
-    pLayout->addWidget(pSourceMode,         0, 0, 1, 1);
-    pLayout->addWidget(pSourceRangeLabel,   0, 1, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pSourceRangeCombo,   0, 2, 1, 1);
-    pLayout->addWidget(pSourceRangeEdit,    0, 3, 1, 1);
-    pLayout->addWidget(pSourceValueLabel,   0, 4, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pSourceValueEdit,    0, 5, 1, 1);
-
-    pLayout->addWidget(pMeasureMode,        1, 0, 1, 1);
-    pLayout->addWidget(pMeasureRangeLabel,  1, 1, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pMeasureRangeCombo,  1, 2, 1, 1);
-    pLayout->addWidget(pMeasureRangeEdit,   1, 3, 1, 1);
-    pLayout->addWidget(pMeasureLimitLabel,  1, 4, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pMeasureLimitEdit,   1, 5, 1, 1);
-
-    pLayout->addWidget(pMeasureNPLCLabel,   2, 0, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pMeasureNPLCEdit,    2, 1, 1, 1);
-
-    pLayout->addWidget(pComplianceButton,   3, 0, 1, 1);
-    pLayout->addWidget(pOnOffLabel,         3, 4, 1, 1, Qt::AlignRight);
-    pLayout->addWidget(pOnOffButton,        3, 5, 1, 1);
-
+void
+ChannelTab::InitLayout() {
+    QVBoxLayout* pLayout  = new QVBoxLayout();
+    QGridLayout* pLayout1 = new QGridLayout();
+    QGridLayout* pLayout2 = new QGridLayout();
+    QGridLayout* pLayout3 = new QGridLayout();
+    // Source Headers (pLayout1)
+    pLayout1->addWidget(pSourceModeLabel,    0, 0, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceRangeLabel,   0, 1, 1, 2, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceValueLabel,   0, 3, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceStartLabel,   0, 3, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceStopLabel,    0, 4, 1, 1, Qt::AlignCenter);
+    pSourceStartLabel->hide();
+    pSourceStopLabel->hide();
+    // Source Ui Elements
+    pLayout1->addWidget(pSourceModeCombo,    1, 0, 1, 1);
+    pLayout1->addWidget(pSourceRangeCombo,   1, 1, 1, 1);
+    pLayout1->addWidget(pSourceRangeEdit,    1, 2, 1, 1);
+    pLayout1->addWidget(pSourceValueEdit,    1, 3, 1, 1);
+    // Measure Headers (pLayout2)
+    pLayout2->addWidget(pMeasureModeLabel,   0, 0, 1, 1, Qt::AlignCenter);
+    pLayout2->addWidget(pMeasureRangeLabel,  0, 1, 1, 2, Qt::AlignCenter);
+    pLayout2->addWidget(pMeasureLimitLabel,  0, 3, 1, 1, Qt::AlignCenter);
+    // Measure Ui Elements
+    pLayout2->addWidget(pMeasureModeCombo,   1, 0, 1, 1);
+    pLayout2->addWidget(pMeasureRangeCombo,  1, 1, 1, 1);
+    pLayout2->addWidget(pMeasureRangeEdit,   1, 2, 1, 1);
+    pLayout2->addWidget(pMeasureLimitEdit,   1, 3, 1, 1);
+    pLayout3->addWidget(pMeasureNPLCLabel,   0, 0, 1, 1, Qt::AlignRight);
+    pLayout3->addWidget(pMeasureNPLCEdit,    0, 1, 1, 1);
+    // Miscellaneous
+    pLayout3->addWidget(pComplianceButton,   1, 0, 1, 1);
+    pLayout3->addWidget(pOnOffLabel,         1, 2, 1, 1, Qt::AlignRight);
+    pLayout3->addWidget(pOnOffButton,        1, 3, 1, 1);
+    // Styles
     sNormalStyle = pMeasureNPLCEdit->styleSheet();
-
     sErrorStyle  = "QLineEdit { ";
     sErrorStyle += "color: rgb(255, 255, 255);";
     sErrorStyle += "background: rgb(255, 0, 0);";
     sErrorStyle += "selection-background-color: rgb(128, 128, 255);";
     sErrorStyle += "}";
-
+    // Layout
+    pLayout->addSpacing(24);
+    pLayout->addLayout(pLayout1);
+    pLayout->addSpacing(24);
+    pLayout->addLayout(pLayout2);
+    pLayout->addSpacing(24);
+    pLayout->addLayout(pLayout3);
     setLayout(pLayout);
-    InitSignals();
-    restoreSettings();
 }
 
 
@@ -133,12 +181,15 @@ ChannelTab::restoreSettings() {
 
 void
 ChannelTab::InitSignals() {
-    connect(pSourceMode, SIGNAL(currentIndexChanged(int)),
+    connect(pSourceModeCombo, SIGNAL(currentIndexChanged(int)),
             this, SLOT(onSourceModeChangedUi(int)));
-    connect(pMeasureMode, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(onMeasureModeChangedUi(int)));
     connect(pSourceRangeCombo, SIGNAL(currentIndexChanged(int)),
             this, SLOT(onSourceRangeChangedUi(int)));
+    connect(pMeasureModeCombo, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(onMeasureModeChangedUi(int)));
+    connect(pMeasureRangeCombo, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(onMeasureRangeChangedUi(int)));
+
     connect(pOnOffButton, SIGNAL(stateChanged(int)),
             this, SLOT(onOnOffChangedUi(int)));
 
@@ -199,8 +250,8 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
              << pChannel->getName()
              << selectedItem;
 #endif
-    pMeasureMode->setCurrentIndex(1-selectedItem);
-    QString sValue = pSourceMode->itemText(selectedItem);
+    pMeasureModeCombo->setCurrentIndex(1-selectedItem);
+    QString sValue = pSourceModeCombo->itemText(selectedItem);
     bool bResult;
     if(sValue.contains("I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
@@ -223,8 +274,8 @@ ChannelTab::onMeasureModeChangedUi(int selectedItem) {
              << pChannel->getName()
              << selectedItem;
 #endif
-    pSourceMode->setCurrentIndex(1-selectedItem);
-    QString sValue = pMeasureMode->itemText(selectedItem);
+    pSourceModeCombo->setCurrentIndex(1-selectedItem);
+    QString sValue = pMeasureModeCombo->itemText(selectedItem);
     bool bResult;
     if(sValue.contains("I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
@@ -233,6 +284,28 @@ ChannelTab::onMeasureModeChangedUi(int selectedItem) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
     }
     (void)bResult;
+}
+
+
+void
+ChannelTab::onMeasureRangeChangedUi(int selectedItem) {
+#ifndef QT_NO_DEBUG
+    qDebug() << __FILE__
+             << "Line:"
+             << __LINE__
+             << __FUNCTION__
+             << "Channel"
+             << pChannel->getName()
+             << selectedItem;
+#endif
+    QString sValue = pMeasureRangeCombo->itemText(selectedItem);
+    if(sValue == "AUTO") {
+        pMeasureRangeEdit->setDisabled(true);
+    }
+    else { // MANUAL
+        pMeasureRangeEdit->setEnabled(true);
+        onMeasureRangeEditingFinished();
+    }
 }
 
 
@@ -253,6 +326,7 @@ ChannelTab::onSourceRangeChangedUi(int selectedItem) {
     }
     else { // MANUAL
         pSourceRangeEdit->setEnabled(true);
+        onSourceRangeEditingFinished();
     }
 }
 
@@ -283,12 +357,12 @@ ChannelTab::setSourceMode_Ui(bool bSourceV) {
              << pChannel->getName();
 #endif
     if(bSourceV) {
-        pMeasureMode->setCurrentIndex(0);
-        pSourceMode->setCurrentIndex(1);
+        pMeasureModeCombo->setCurrentIndex(0);
+        pSourceModeCombo->setCurrentIndex(1);
     }
     else {
-        pMeasureMode->setCurrentIndex(1);
-        pSourceMode->setCurrentIndex(0);
+        pMeasureModeCombo->setCurrentIndex(1);
+        pSourceModeCombo->setCurrentIndex(0);
     }
 }
 
