@@ -73,8 +73,8 @@ ChannelTab::CreateUiElements() {
     pOnOffButton       = new QCheckBox("On/Off");
     // ComboBoxes Initialization
     pSourceModeCombo->addItems(QStringList(QList<QString>{
-                                               "Source I",
                                                "Source V",
+                                               "Source I",
                                                "Dc Sweep V",
                                                "Dc Sweep I",
                                                "Pulsed Swp V",
@@ -241,6 +241,7 @@ ChannelTab::onNPLCEditingFinished() {
 
 void
 ChannelTab::onSourceModeChangedUi(int selectedItem) {
+    bool bResult = false;
 #ifndef QT_NO_DEBUG
     qDebug() << __FILE__
              << "Line:"
@@ -248,17 +249,34 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
              << __FUNCTION__
              << "Channel"
              << pChannel->getName()
-             << selectedItem;
+             << pSourceModeCombo->itemText(selectedItem);
 #endif
-    pMeasureModeCombo->setCurrentIndex(1-selectedItem);
     QString sValue = pSourceModeCombo->itemText(selectedItem);
-    bool bResult;
-    if(sValue.contains("I")) {
-        bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
-    }
-    else {
+    if(sValue == QString("Source V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
+        pMeasureModeCombo->setCurrentText("Measure I");
     }
+    else if(sValue == QString("Source I")) {
+        bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
+        pMeasureModeCombo->setCurrentText("Measure V");
+    }
+    else if(sValue == QString("Dc Sweep V")) {
+        bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_V);
+        pMeasureModeCombo->setCurrentText("Measure I");
+    }
+    else if(sValue == QString("Dc Sweep I")) {
+        bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_I);
+        pMeasureModeCombo->setCurrentText("Measure V");
+    }
+    else if(sValue == QString("Pulsed Swp V")) {
+        bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_V);
+        pMeasureModeCombo->setCurrentText("Measure I");
+    }
+    else if(sValue == QString("Pulsed Swp I")) {
+        bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_I);
+        pMeasureModeCombo->setCurrentText("Measure V");
+    }
+
     (void)bResult;
 }
 
@@ -272,9 +290,9 @@ ChannelTab::onMeasureModeChangedUi(int selectedItem) {
              << __FUNCTION__
              << "Channel"
              << pChannel->getName()
-             << selectedItem;
+             << pMeasureModeCombo->itemText(selectedItem);
 #endif
-    pSourceModeCombo->setCurrentIndex(1-selectedItem);
+//>>>>    pSourceModeCombo->setCurrentIndex(1-selectedItem);
     QString sValue = pMeasureModeCombo->itemText(selectedItem);
     bool bResult;
     if(sValue.contains("I")) {
@@ -296,7 +314,7 @@ ChannelTab::onMeasureRangeChangedUi(int selectedItem) {
              << __FUNCTION__
              << "Channel"
              << pChannel->getName()
-             << selectedItem;
+             << pMeasureRangeCombo->itemText(selectedItem);
 #endif
     QString sValue = pMeasureRangeCombo->itemText(selectedItem);
     if(sValue == "AUTO") {
@@ -318,7 +336,7 @@ ChannelTab::onSourceRangeChangedUi(int selectedItem) {
              << __FUNCTION__
              << "Channel"
              << pChannel->getName()
-             << selectedItem;
+             << pSourceRangeCombo->itemText(selectedItem);
 #endif
     QString sValue = pSourceRangeCombo->itemText(selectedItem);
     if(sValue == "AUTO") {

@@ -93,10 +93,27 @@ K2602B_Channel::setSourceFunction(smuFunction function) {
              << "Channel"
              << sName;
 #endif
-    if(function == CURRENT)
-        sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCAMPS").arg(sName, sName);
-    else
-        sCommand = QString("smu%1.source.func = smu%2.OUTPUT_DCVOLTS").arg(sName, sName);
+    if(function == VOLTAGE) {
+        sCommand = QString("smu%1.source.func = smu%1.OUTPUT_DCVOLTS")
+                .arg(sName);
+    }
+    else if(function == CURRENT) {
+        sCommand = QString("smu%1.source.func = smu%1.OUTPUT_DCAMPS")
+                .arg(sName);
+    }
+    else if(function == DC_SWEEP_V) {
+//        sCommand = QString("SweepILinMeasureV(smu%1, 1e-3, 10e-3, 0.1, 10)")
+//                .arg(sName);
+    }
+    else if(function == DC_SWEEP_I) {
+        ;
+    }
+    else if(function == PLSD_SWEEP_V) {
+        ;
+    }
+    else if(function == PLSD_SWEEP_I) {
+        ;
+    }
     return pComm->send(sCommand) != LXI_ERROR;
 }
 

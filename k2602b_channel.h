@@ -34,8 +34,12 @@ public:
 
 public:
     typedef enum smuFunction {
-        CURRENT = 0,
-        VOLTAGE
+        VOLTAGE = 0,
+        CURRENT,
+        DC_SWEEP_V,
+        DC_SWEEP_I,
+        PLSD_SWEEP_I,
+        PLSD_SWEEP_V
     } outputFunction;
     typedef enum smuAutoZero {
         OFF = 0,
@@ -56,16 +60,17 @@ public:
     bool setLimit(double dValue);
     bool setSenseLocal(bool bSenseLocal);
 
-    bool isOn();
+    bool   isOn();
     double getNPLC();
-    bool isSourceV();
+    bool   isSourceV();
     double getSourceValue();
     double getSourceRange();
     double getMeasureRange();
     double getLimit();
-    bool getCompliance();
+    bool   getCompliance();
     double getSingleMeasure();
-    bool abort();
+
+    bool   abort();
 
 signals:
 
