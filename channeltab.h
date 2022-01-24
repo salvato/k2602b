@@ -91,11 +91,17 @@ private:
     QLabel*    pSourceStopLabel;
     QLabel*    pSourceSettlingTimeLabel;
     QLabel*    pSourceNpointsLabel;
+    QLabel*    pOnTimeLabel;
+    QLabel*    pOffTimeLabel;
+    QLabel*    pBiasLabel;
 
     QLineEdit*    pSourceStartEdit;
     QLineEdit*    pSourceStopEdit;
     QLineEdit*    pSourceSettlingTimeEdit;
     QLineEdit*    pSourceNpointsEdit;
+    QLineEdit*    pOnTimeEdit;
+    QLineEdit*    pOffTimeEdit;
+    QLineEdit*    pBiasEdit;
 
     QLabel*    pMeasureModeLabel;
     QLabel*    pMeasureRangeLabel;

@@ -55,6 +55,10 @@ ChannelTab::CreateUiElements() {
     pSourceStopLabel         = new QLabel("Sweep Stop");
     pSourceSettlingTimeLabel = new QLabel("Settling Time [s]");
     pSourceNpointsLabel      = new QLabel("Sweep Points");
+    pOnTimeLabel             = new QLabel("On Time [s]");
+    pOffTimeLabel            = new QLabel("Off Time[s]");
+    pBiasLabel               = new QLabel("Bias");
+
 
     pMeasureModeLabel  = new QLabel("Measure Mode");
     pMeasureRangeLabel = new QLabel("Measure Range");
@@ -76,6 +80,10 @@ ChannelTab::CreateUiElements() {
     pMeasureRangeEdit       = new QLineEdit("0.0");
     pMeasureLimitEdit       = new QLineEdit("0.0");
     pMeasureNPLCEdit        = new QLineEdit("0");
+    pOnTimeEdit             = new QLineEdit("0.1");
+    pOffTimeEdit            = new QLineEdit("0.1");
+    pBiasEdit               = new QLineEdit("0.1");
+
     // CheckBoxes
     pComplianceButton  = new QCheckBox("Compliance");
     pOnOffButton       = new QCheckBox("On/Off");
@@ -110,6 +118,9 @@ ChannelTab::CreateUiElements() {
     pMeasureRangeEdit->setAlignment(Qt::AlignRight);
     pMeasureLimitEdit->setAlignment(Qt::AlignRight);
     pMeasureNPLCEdit->setAlignment(Qt::AlignRight);
+    pOnTimeEdit->setAlignment(Qt::AlignRight);
+    pOffTimeEdit->setAlignment(Qt::AlignRight);
+    pBiasEdit->setAlignment(Qt::AlignRight);
     //
     pSourceModeLabel->setMaximumWidth(120);
     pSourceRangeLabel->setMaximumWidth(120);
@@ -125,6 +136,13 @@ ChannelTab::CreateUiElements() {
     pSourceStopEdit->setMaximumWidth(120);
     pSourceSettlingTimeLabel->setMaximumWidth(120);
     pSourceValueEdit->setMaximumWidth(120);
+    pOnTimeLabel->setMaximumWidth(120);
+    pOffTimeLabel->setMaximumWidth(120);
+    pBiasLabel->setMaximumWidth(120);
+    pOnTimeEdit->setMaximumWidth(120);
+    pOffTimeEdit->setMaximumWidth(120);
+    pBiasEdit->setMaximumWidth(120);
+
     //
     pMeasureNPLCLabel->setMaximumWidth(120);
     pMeasureNPLCEdit->setMaximumWidth(120);
@@ -160,6 +178,12 @@ ChannelTab::InitLayout() {
     pLayout1->addWidget(pSourceStopEdit,         3, 1, 1, 1);
     pLayout1->addWidget(pSourceSettlingTimeEdit, 3, 2, 1, 1);
     pLayout1->addWidget(pSourceNpointsEdit,      3, 3, 1, 1);
+    pLayout1->addWidget(pOnTimeLabel,            4, 0, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pOffTimeLabel,           4, 1, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pBiasLabel,              4, 2, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pOnTimeEdit,             5, 0, 1, 1);
+    pLayout1->addWidget(pOffTimeEdit,            5, 1, 1, 1);
+    pLayout1->addWidget(pBiasEdit,               5, 2, 1, 1);
 
 //    pSourceStartLabel->hide();
 //    pSourceStopLabel->hide();
@@ -168,6 +192,13 @@ ChannelTab::InitLayout() {
 //    pSourceStopEdit->hide();
 //    pSourceSettlingTimeEdit->hide();
 //    pSourceNpointsEdit->hide();
+//    pOnTimeLabel->hide();
+//    pOffTimeLabel->hide();
+//    pBiasLabel->hide();
+//    pOnTimeEdit->hide();
+//    pOffTimeEdit->hide();
+//    pBiasEdit->hide();
+
 
     // Measure Headers (pLayout2)
     pLayout2->addWidget(pMeasureModeLabel,   0, 0, 1, 1, Qt::AlignCenter);
