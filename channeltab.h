@@ -81,17 +81,25 @@ private:
     QLabel*    pSourceModeLabel;
     QLabel*    pSourceRangeLabel;
     QLabel*    pSourceValueLabel;
-    QLabel*    pSourceStartLabel;
-    QLabel*    pSourceStopLabel;
-
-    QLabel*    pMeasureModeLabel;
-    QLabel*    pMeasureRangeLabel;
-    QLabel*    pMeasureLimitLabel;
 
     QComboBox* pSourceModeCombo;
     QComboBox* pSourceRangeCombo;
     QLineEdit* pSourceRangeEdit;
     QLineEdit* pSourceValueEdit;
+
+    QLabel*    pSourceStartLabel;
+    QLabel*    pSourceStopLabel;
+    QLabel*    pSourceSettlingTimeLabel;
+    QLabel*    pSourceNpointsLabel;
+
+    QLineEdit*    pSourceStartEdit;
+    QLineEdit*    pSourceStopEdit;
+    QLineEdit*    pSourceSettlingTimeEdit;
+    QLineEdit*    pSourceNpointsEdit;
+
+    QLabel*    pMeasureModeLabel;
+    QLabel*    pMeasureRangeLabel;
+    QLabel*    pMeasureLimitLabel;
 
     QComboBox* pMeasureModeCombo;
     QComboBox* pMeasureRangeCombo;

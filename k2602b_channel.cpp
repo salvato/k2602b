@@ -93,6 +93,7 @@ K2602B_Channel::setSourceFunction(smuFunction function) {
              << "Channel"
              << sName;
 #endif
+    sCommand = QString();
     if(function == VOLTAGE) {
         sCommand = QString("smu%1.source.func = smu%1.OUTPUT_DCVOLTS")
                 .arg(sName);
@@ -102,9 +103,15 @@ K2602B_Channel::setSourceFunction(smuFunction function) {
                 .arg(sName);
     }
     else if(function == DC_SWEEP_V) {
-//        sCommand = QString("SweepILinMeasureV(smu%1, 1e-3, 10e-3, 0.1, 10)")
+//        sCommand = QString("smu%1.trigger.source.linearv(0.0, 1.0, 11)")
 //                .arg(sName);
-    }
+//        pComm->send(sCommand);
+//        sCommand = QString("smu%1.trigger.source.action=smu%1.ENABLE")
+//                .arg(sName);
+//        pComm->send(sCommand);
+//        sCommand = QString("smu%1.trigger.initiate()")
+//                .arg(sName);
+}
     else if(function == DC_SWEEP_I) {
         ;
     }

@@ -50,8 +50,12 @@ ChannelTab::CreateUiElements() {
     pSourceModeLabel   = new QLabel("Source Mode");
     pSourceRangeLabel  = new QLabel("Source Range");
     pSourceValueLabel  = new QLabel("Source Value");
-    pSourceStartLabel  = new QLabel("Source Start");
-    pSourceStopLabel   = new QLabel("Source Stop");
+
+    pSourceStartLabel        = new QLabel("Sweep Start");
+    pSourceStopLabel         = new QLabel("Sweep Stop");
+    pSourceSettlingTimeLabel = new QLabel("Settling Time [s]");
+    pSourceNpointsLabel      = new QLabel("Sweep Points");
+
     pMeasureModeLabel  = new QLabel("Measure Mode");
     pMeasureRangeLabel = new QLabel("Measure Range");
     pMeasureLimitLabel = new QLabel("Measure Limit");
@@ -63,11 +67,15 @@ ChannelTab::CreateUiElements() {
     pMeasureModeCombo  = new QComboBox();
     pMeasureRangeCombo = new QComboBox();
     // LineEdits
-    pSourceRangeEdit   = new QLineEdit("0.0");
-    pSourceValueEdit   = new QLineEdit("0.0");
-    pMeasureRangeEdit  = new QLineEdit("0.0");
-    pMeasureLimitEdit  = new QLineEdit("0.0");
-    pMeasureNPLCEdit   = new QLineEdit("0");
+    pSourceRangeEdit        = new QLineEdit("0.0");
+    pSourceValueEdit        = new QLineEdit("0.0");
+    pSourceStartEdit        = new QLineEdit("0.0");
+    pSourceStopEdit         = new QLineEdit("1.0e-6");
+    pSourceSettlingTimeEdit = new QLineEdit("0.1");
+    pSourceNpointsEdit      = new QLineEdit("11");
+    pMeasureRangeEdit       = new QLineEdit("0.0");
+    pMeasureLimitEdit       = new QLineEdit("0.0");
+    pMeasureNPLCEdit        = new QLineEdit("0");
     // CheckBoxes
     pComplianceButton  = new QCheckBox("Compliance");
     pOnOffButton       = new QCheckBox("On/Off");
@@ -77,8 +85,8 @@ ChannelTab::CreateUiElements() {
                                                "Source I",
                                                "Dc Sweep V",
                                                "Dc Sweep I",
-                                               "Pulsed Swp V",
-                                               "Pulsed Swp I"}));
+                                               "Plsd Sweep V",
+                                               "Plsd Sweep I"}));
     pSourceRangeCombo->addItems(QStringList(QList<QString>{
                                                 "AUTO",
                                                 "MANUAL"}));
@@ -95,6 +103,10 @@ ChannelTab::CreateUiElements() {
     //
     pSourceRangeEdit->setAlignment(Qt::AlignRight);
     pSourceValueEdit->setAlignment(Qt::AlignRight);
+    pSourceStartEdit->setAlignment(Qt::AlignRight);
+    pSourceStopEdit->setAlignment(Qt::AlignRight);
+    pSourceSettlingTimeEdit->setAlignment(Qt::AlignRight);
+    pSourceNpointsEdit->setAlignment(Qt::AlignRight);
     pMeasureRangeEdit->setAlignment(Qt::AlignRight);
     pMeasureLimitEdit->setAlignment(Qt::AlignRight);
     pMeasureNPLCEdit->setAlignment(Qt::AlignRight);
@@ -104,10 +116,16 @@ ChannelTab::CreateUiElements() {
     pSourceValueLabel->setMaximumWidth(120);
     pSourceStartLabel->setMaximumWidth(120);
     pSourceStopLabel->setMaximumWidth(120);
+    pSourceSettlingTimeEdit->setMaximumWidth(120);
+    pSourceNpointsEdit->setMaximumWidth(120);
     pSourceModeCombo->setMaximumWidth(120);
     pSourceRangeCombo->setMaximumWidth(120);
     pSourceRangeEdit->setMaximumWidth(120);
+    pSourceStartEdit->setMaximumWidth(120);
+    pSourceStopEdit->setMaximumWidth(120);
+    pSourceSettlingTimeLabel->setMaximumWidth(120);
     pSourceValueEdit->setMaximumWidth(120);
+    //
     pMeasureNPLCLabel->setMaximumWidth(120);
     pMeasureNPLCEdit->setMaximumWidth(120);
     pMeasureModeCombo->setMaximumWidth(120);
@@ -123,19 +141,34 @@ ChannelTab::InitLayout() {
     QGridLayout* pLayout1 = new QGridLayout();
     QGridLayout* pLayout2 = new QGridLayout();
     QGridLayout* pLayout3 = new QGridLayout();
-    // Source Headers (pLayout1)
+    // Source Ui Labels (pLayout1)
     pLayout1->addWidget(pSourceModeLabel,    0, 0, 1, 1, Qt::AlignCenter);
     pLayout1->addWidget(pSourceRangeLabel,   0, 1, 1, 2, Qt::AlignCenter);
     pLayout1->addWidget(pSourceValueLabel,   0, 3, 1, 1, Qt::AlignCenter);
-    pLayout1->addWidget(pSourceStartLabel,   0, 3, 1, 1, Qt::AlignCenter);
-    pLayout1->addWidget(pSourceStopLabel,    0, 4, 1, 1, Qt::AlignCenter);
-    pSourceStartLabel->hide();
-    pSourceStopLabel->hide();
     // Source Ui Elements
     pLayout1->addWidget(pSourceModeCombo,    1, 0, 1, 1);
     pLayout1->addWidget(pSourceRangeCombo,   1, 1, 1, 1);
     pLayout1->addWidget(pSourceRangeEdit,    1, 2, 1, 1);
     pLayout1->addWidget(pSourceValueEdit,    1, 3, 1, 1);
+    // Sweep Ui Labels
+    pLayout1->addWidget(pSourceStartLabel,        2, 0, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceStopLabel,         2, 1, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceSettlingTimeLabel, 2, 2, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceNpointsLabel,      2, 3, 1, 1, Qt::AlignCenter);
+    // Sweep Ui Elements
+    pLayout1->addWidget(pSourceStartEdit,        3, 0, 1, 1);
+    pLayout1->addWidget(pSourceStopEdit,         3, 1, 1, 1);
+    pLayout1->addWidget(pSourceSettlingTimeEdit, 3, 2, 1, 1);
+    pLayout1->addWidget(pSourceNpointsEdit,      3, 3, 1, 1);
+
+//    pSourceStartLabel->hide();
+//    pSourceStopLabel->hide();
+//    pSourceNpointsLabel->hide();
+//    pSourceStartEdit->hide();
+//    pSourceStopEdit->hide();
+//    pSourceSettlingTimeEdit->hide();
+//    pSourceNpointsEdit->hide();
+
     // Measure Headers (pLayout2)
     pLayout2->addWidget(pMeasureModeLabel,   0, 0, 1, 1, Qt::AlignCenter);
     pLayout2->addWidget(pMeasureRangeLabel,  0, 1, 1, 2, Qt::AlignCenter);
@@ -292,7 +325,6 @@ ChannelTab::onMeasureModeChangedUi(int selectedItem) {
              << pChannel->getName()
              << pMeasureModeCombo->itemText(selectedItem);
 #endif
-//>>>>    pSourceModeCombo->setCurrentIndex(1-selectedItem);
     QString sValue = pMeasureModeCombo->itemText(selectedItem);
     bool bResult;
     if(sValue.contains("I")) {
