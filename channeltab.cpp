@@ -24,6 +24,7 @@
 #include "channeltab.h"
 
 #include <QGridLayout>
+#include <QGroupBox>
 
 
 ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
@@ -31,6 +32,13 @@ ChannelTab::ChannelTab(K2602B_Channel* pCh, QWidget *parent)
     , pChannel(pCh)
 {
     CreateUiElements();
+    // Styles
+    sNormalStyle = pMeasureNPLCEdit->styleSheet();
+    sErrorStyle  = "QLineEdit { ";
+    sErrorStyle += "color: rgb(255, 255, 255);";
+    sErrorStyle += "background: rgb(255, 0, 0);";
+    sErrorStyle += "selection-background-color: rgb(128, 128, 255);";
+    sErrorStyle += "}";
     InitLayout();
     restoreSettings();
     InitSignals();
@@ -47,46 +55,48 @@ ChannelTab::closeEvent(QCloseEvent*event) {
 void
 ChannelTab::CreateUiElements() {
     // Labels
-    pSourceModeLabel   = new QLabel("Source Mode");
-    pSourceRangeLabel  = new QLabel("Source Range");
-    pSourceValueLabel  = new QLabel("Source Value");
+    pSourceModeLabel         = new QLabel("Mode", this);
+    pSourceRangeLabel        = new QLabel("Range", this);
+    pSourceValueLabel        = new QLabel("Value", this);
+    pSourceStartLabel        = new QLabel("Sweep Start", this);
+    pSourceStopLabel         = new QLabel("Sweep Stop", this);
+    pSourceNpointsLabel      = new QLabel("Sweep Points", this);
+    pSourceSettlingTimeLabel = new QLabel("Settling Time [s]", this);
+    pOnTimeLabel             = new QLabel("On Time [s]", this);
+    pOffTimeLabel            = new QLabel("Off Time[s]", this);
+    pBiasLabel               = new QLabel("Bias", this);
+    pMeasureRangeLabel       = new QLabel("Range", this);
+    pMeasureLimitLabel       = new QLabel("Limit", this);
+    pMeasureNPLCLabel        = new QLabel("NPLC", this);
+    pOnOffLabel              = new QLabel("Output", this);
 
-    pSourceStartLabel        = new QLabel("Sweep Start");
-    pSourceStopLabel         = new QLabel("Sweep Stop");
-    pSourceSettlingTimeLabel = new QLabel("Settling Time [s]");
-    pSourceNpointsLabel      = new QLabel("Sweep Points");
-    pOnTimeLabel             = new QLabel("On Time [s]");
-    pOffTimeLabel            = new QLabel("Off Time[s]");
-    pBiasLabel               = new QLabel("Bias");
-
-
-    pMeasureModeLabel  = new QLabel("Measure Mode");
-    pMeasureRangeLabel = new QLabel("Measure Range");
-    pMeasureLimitLabel = new QLabel("Measure Limit");
-    pMeasureNPLCLabel  = new QLabel("NPLC");
-    pOnOffLabel        = new QLabel("Output");
     // ComboBoxes
-    pSourceModeCombo   = new QComboBox();
-    pSourceRangeCombo  = new QComboBox();
-    pMeasureModeCombo  = new QComboBox();
-    pMeasureRangeCombo = new QComboBox();
+    pSourceModeCombo   = new QComboBox(this);
+    pSourceRangeCombo  = new QComboBox(this);
+    pMeasureRangeCombo = new QComboBox(this);
+
     // LineEdits
-    pSourceRangeEdit        = new QLineEdit("0.0");
-    pSourceValueEdit        = new QLineEdit("0.0");
-    pSourceStartEdit        = new QLineEdit("0.0");
-    pSourceStopEdit         = new QLineEdit("1.0e-6");
-    pSourceSettlingTimeEdit = new QLineEdit("0.1");
-    pSourceNpointsEdit      = new QLineEdit("11");
-    pMeasureRangeEdit       = new QLineEdit("0.0");
-    pMeasureLimitEdit       = new QLineEdit("0.0");
-    pMeasureNPLCEdit        = new QLineEdit("0");
-    pOnTimeEdit             = new QLineEdit("0.1");
-    pOffTimeEdit            = new QLineEdit("0.1");
-    pBiasEdit               = new QLineEdit("0.1");
+    pSourceRangeEdit        = new QLineEdit("0.0", this);
+    pSourceValueEdit        = new QLineEdit("0.0", this);
+    pSourceStartEdit        = new QLineEdit("0.0", this);
+    pSourceStopEdit         = new QLineEdit("1.0e-6", this);
+    pSourceSettlingTimeEdit = new QLineEdit("0.1", this);
+    pSourceNpointsEdit      = new QLineEdit("11", this);
+    pMeasureRangeEdit       = new QLineEdit("0.0", this);
+    pMeasureLimitEdit       = new QLineEdit("0.0", this);
+    pMeasureNPLCEdit        = new QLineEdit("0", this);
+    pOnTimeEdit             = new QLineEdit("0.1", this);
+    pOffTimeEdit            = new QLineEdit("0.1", this);
+    pBiasEdit               = new QLineEdit("0.1", this);
 
     // CheckBoxes
-    pComplianceButton  = new QCheckBox("Compliance");
-    pOnOffButton       = new QCheckBox("On/Off");
+    pMeasureCurrent    = new QCheckBox("Current", this);
+    pMeasureVoltage    = new QCheckBox("Voltage", this);
+    pMeasureResistance = new QCheckBox("Resistance", this);
+    pMeasurePower      = new QCheckBox("Power", this);
+    pComplianceButton  = new QCheckBox("Compliance", this);
+    pOnOffButton       = new QCheckBox("On/Off", this);
+
     // ComboBoxes Initialization
     pSourceModeCombo->addItems(QStringList(QList<QString>{
                                                "Source V",
@@ -98,9 +108,6 @@ ChannelTab::CreateUiElements() {
     pSourceRangeCombo->addItems(QStringList(QList<QString>{
                                                 "AUTO",
                                                 "MANUAL"}));
-    pMeasureModeCombo->addItems(QStringList(QList<QString>{
-                                                "Measure I",
-                                                "Measure V"}));
     pMeasureRangeCombo->addItems(QStringList(QList<QString>{
                                                  "AUTO",
                                                  "MANUAL"}));
@@ -109,47 +116,14 @@ ChannelTab::CreateUiElements() {
     pComplianceButton->setAttribute(Qt::WA_TransparentForMouseEvents);
     pComplianceButton->setFocusPolicy(Qt::NoFocus);
     //
-    pSourceRangeEdit->setAlignment(Qt::AlignRight);
-    pSourceValueEdit->setAlignment(Qt::AlignRight);
-    pSourceStartEdit->setAlignment(Qt::AlignRight);
-    pSourceStopEdit->setAlignment(Qt::AlignRight);
-    pSourceSettlingTimeEdit->setAlignment(Qt::AlignRight);
-    pSourceNpointsEdit->setAlignment(Qt::AlignRight);
-    pMeasureRangeEdit->setAlignment(Qt::AlignRight);
-    pMeasureLimitEdit->setAlignment(Qt::AlignRight);
-    pMeasureNPLCEdit->setAlignment(Qt::AlignRight);
-    pOnTimeEdit->setAlignment(Qt::AlignRight);
-    pOffTimeEdit->setAlignment(Qt::AlignRight);
-    pBiasEdit->setAlignment(Qt::AlignRight);
-    //
-    pSourceModeLabel->setMaximumWidth(120);
-    pSourceRangeLabel->setMaximumWidth(120);
-    pSourceValueLabel->setMaximumWidth(120);
-    pSourceStartLabel->setMaximumWidth(120);
-    pSourceStopLabel->setMaximumWidth(120);
-    pSourceSettlingTimeEdit->setMaximumWidth(120);
-    pSourceNpointsEdit->setMaximumWidth(120);
-    pSourceModeCombo->setMaximumWidth(120);
-    pSourceRangeCombo->setMaximumWidth(120);
-    pSourceRangeEdit->setMaximumWidth(120);
-    pSourceStartEdit->setMaximumWidth(120);
-    pSourceStopEdit->setMaximumWidth(120);
-    pSourceSettlingTimeLabel->setMaximumWidth(120);
-    pSourceValueEdit->setMaximumWidth(120);
-    pOnTimeLabel->setMaximumWidth(120);
-    pOffTimeLabel->setMaximumWidth(120);
-    pBiasLabel->setMaximumWidth(120);
-    pOnTimeEdit->setMaximumWidth(120);
-    pOffTimeEdit->setMaximumWidth(120);
-    pBiasEdit->setMaximumWidth(120);
-
-    //
-    pMeasureNPLCLabel->setMaximumWidth(120);
-    pMeasureNPLCEdit->setMaximumWidth(120);
-    pMeasureModeCombo->setMaximumWidth(120);
-    pMeasureRangeCombo->setMaximumWidth(120);
-    pMeasureRangeEdit->setMaximumWidth(120);
-    pMeasureLimitEdit->setMaximumWidth(120);
+    QList<QWidget*> widgetList = findChildren<QWidget*>();
+    for(int i=0; i<widgetList.size(); i++) {
+        widgetList.at(i)->setMaximumWidth(120);
+    }
+    QList<QLineEdit*> editList = findChildren<QLineEdit*>();
+    for(int i=0; i<editList.size(); i++) {
+        editList.at(i)->setAlignment(Qt::AlignRight);
+    }
 }
 
 
@@ -159,31 +133,66 @@ ChannelTab::InitLayout() {
     QGridLayout* pLayout1 = new QGridLayout();
     QGridLayout* pLayout2 = new QGridLayout();
     QGridLayout* pLayout3 = new QGridLayout();
+
+    QGroupBox* pSourceGroupBox = new QGroupBox(tr("Source"));
     // Source Ui Labels (pLayout1)
-    pLayout1->addWidget(pSourceModeLabel,    0, 0, 1, 1, Qt::AlignCenter);
-    pLayout1->addWidget(pSourceRangeLabel,   0, 1, 1, 2, Qt::AlignCenter);
-    pLayout1->addWidget(pSourceValueLabel,   0, 3, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceModeLabel,         0, 0, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceRangeLabel,        0, 1, 1, 2, Qt::AlignCenter);
+    pLayout1->addWidget(pSourceValueLabel,        0, 3, 1, 1, Qt::AlignCenter);
     // Source Ui Elements
-    pLayout1->addWidget(pSourceModeCombo,    1, 0, 1, 1);
-    pLayout1->addWidget(pSourceRangeCombo,   1, 1, 1, 1);
-    pLayout1->addWidget(pSourceRangeEdit,    1, 2, 1, 1);
-    pLayout1->addWidget(pSourceValueEdit,    1, 3, 1, 1);
+    pLayout1->addWidget(pSourceModeCombo,         1, 0, 1, 1);
+    pLayout1->addWidget(pSourceRangeCombo,        1, 1, 1, 1);
+    pLayout1->addWidget(pSourceRangeEdit,         1, 2, 1, 1);
+    pLayout1->addWidget(pSourceValueEdit,         1, 3, 1, 1);
     // Sweep Ui Labels
     pLayout1->addWidget(pSourceStartLabel,        2, 0, 1, 1, Qt::AlignCenter);
     pLayout1->addWidget(pSourceStopLabel,         2, 1, 1, 1, Qt::AlignCenter);
     pLayout1->addWidget(pSourceSettlingTimeLabel, 2, 2, 1, 1, Qt::AlignCenter);
     pLayout1->addWidget(pSourceNpointsLabel,      2, 3, 1, 1, Qt::AlignCenter);
     // Sweep Ui Elements
-    pLayout1->addWidget(pSourceStartEdit,        3, 0, 1, 1);
-    pLayout1->addWidget(pSourceStopEdit,         3, 1, 1, 1);
-    pLayout1->addWidget(pSourceSettlingTimeEdit, 3, 2, 1, 1);
-    pLayout1->addWidget(pSourceNpointsEdit,      3, 3, 1, 1);
-    pLayout1->addWidget(pOnTimeLabel,            4, 0, 1, 1, Qt::AlignCenter);
-    pLayout1->addWidget(pOffTimeLabel,           4, 1, 1, 1, Qt::AlignCenter);
-    pLayout1->addWidget(pBiasLabel,              4, 2, 1, 1, Qt::AlignCenter);
-    pLayout1->addWidget(pOnTimeEdit,             5, 0, 1, 1);
-    pLayout1->addWidget(pOffTimeEdit,            5, 1, 1, 1);
-    pLayout1->addWidget(pBiasEdit,               5, 2, 1, 1);
+    pLayout1->addWidget(pSourceStartEdit,         3, 0, 1, 1);
+    pLayout1->addWidget(pSourceStopEdit,          3, 1, 1, 1);
+    pLayout1->addWidget(pSourceSettlingTimeEdit,  3, 2, 1, 1);
+    pLayout1->addWidget(pSourceNpointsEdit,       3, 3, 1, 1);
+    pLayout1->addWidget(pOnTimeLabel,             4, 0, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pOffTimeLabel,            4, 1, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pBiasLabel,               4, 2, 1, 1, Qt::AlignCenter);
+    pLayout1->addWidget(pOnTimeEdit,              5, 0, 1, 1);
+    pLayout1->addWidget(pOffTimeEdit,             5, 1, 1, 1);
+    pLayout1->addWidget(pBiasEdit,                5, 2, 1, 1);
+    pSourceGroupBox->setLayout(pLayout1);
+
+    QGroupBox* pMeasureGroupBox = new QGroupBox(tr("Measure"));
+    // Measure Ui Labels (pLayout2)
+    pLayout2->addWidget(pMeasureRangeLabel,  0, 1, 1, 2, Qt::AlignCenter);
+    pLayout2->addWidget(pMeasureLimitLabel,  0, 3, 1, 1, Qt::AlignCenter);
+    // Measure Ui Elements
+    pLayout2->addWidget(pMeasureCurrent,     0, 0, 1, 1);
+    pLayout2->addWidget(pMeasureVoltage,     1, 0, 1, 1);
+    pLayout2->addWidget(pMeasureResistance,  2, 0, 1, 1);
+    pLayout2->addWidget(pMeasurePower,       3, 0, 1, 1);
+    pLayout2->addWidget(pMeasureRangeCombo,  1, 1, 1, 1);
+    pLayout2->addWidget(pMeasureRangeEdit,   1, 2, 1, 1);
+    pLayout2->addWidget(pMeasureLimitEdit,   1, 3, 1, 1);
+    pLayout2->addWidget(pMeasureNPLCLabel,   4, 0, 1, 1, Qt::AlignRight);
+    pLayout2->addWidget(pMeasureNPLCEdit,    4, 1, 1, 1);
+    pMeasureGroupBox->setLayout(pLayout2);
+
+    QGroupBox* pOtherGroupBox = new QGroupBox(tr(""));
+    // Miscellaneous
+    pLayout3->addWidget(pComplianceButton,   1, 0, 1, 1);
+    pLayout3->addWidget(pOnOffLabel,         1, 2, 1, 1, Qt::AlignRight);
+    pLayout3->addWidget(pOnOffButton,        1, 3, 1, 1);
+    pOtherGroupBox->setLayout(pLayout3);
+
+    // Layout
+    pLayout->addSpacing(24);
+    pLayout->addWidget(pSourceGroupBox);
+    pLayout->addSpacing(24);
+    pLayout->addWidget(pMeasureGroupBox);
+    pLayout->addSpacing(24);
+    pLayout->addWidget(pOtherGroupBox);
+    setLayout(pLayout);
 
 //    pSourceStartLabel->hide();
 //    pSourceStopLabel->hide();
@@ -198,38 +207,6 @@ ChannelTab::InitLayout() {
 //    pOnTimeEdit->hide();
 //    pOffTimeEdit->hide();
 //    pBiasEdit->hide();
-
-
-    // Measure Headers (pLayout2)
-    pLayout2->addWidget(pMeasureModeLabel,   0, 0, 1, 1, Qt::AlignCenter);
-    pLayout2->addWidget(pMeasureRangeLabel,  0, 1, 1, 2, Qt::AlignCenter);
-    pLayout2->addWidget(pMeasureLimitLabel,  0, 3, 1, 1, Qt::AlignCenter);
-    // Measure Ui Elements
-    pLayout2->addWidget(pMeasureModeCombo,   1, 0, 1, 1);
-    pLayout2->addWidget(pMeasureRangeCombo,  1, 1, 1, 1);
-    pLayout2->addWidget(pMeasureRangeEdit,   1, 2, 1, 1);
-    pLayout2->addWidget(pMeasureLimitEdit,   1, 3, 1, 1);
-    pLayout3->addWidget(pMeasureNPLCLabel,   0, 0, 1, 1, Qt::AlignRight);
-    pLayout3->addWidget(pMeasureNPLCEdit,    0, 1, 1, 1);
-    // Miscellaneous
-    pLayout3->addWidget(pComplianceButton,   1, 0, 1, 1);
-    pLayout3->addWidget(pOnOffLabel,         1, 2, 1, 1, Qt::AlignRight);
-    pLayout3->addWidget(pOnOffButton,        1, 3, 1, 1);
-    // Styles
-    sNormalStyle = pMeasureNPLCEdit->styleSheet();
-    sErrorStyle  = "QLineEdit { ";
-    sErrorStyle += "color: rgb(255, 255, 255);";
-    sErrorStyle += "background: rgb(255, 0, 0);";
-    sErrorStyle += "selection-background-color: rgb(128, 128, 255);";
-    sErrorStyle += "}";
-    // Layout
-    pLayout->addSpacing(24);
-    pLayout->addLayout(pLayout1);
-    pLayout->addSpacing(24);
-    pLayout->addLayout(pLayout2);
-    pLayout->addSpacing(24);
-    pLayout->addLayout(pLayout3);
-    setLayout(pLayout);
 }
 
 
@@ -249,8 +226,6 @@ ChannelTab::InitSignals() {
             this, SLOT(onSourceModeChangedUi(int)));
     connect(pSourceRangeCombo, SIGNAL(currentIndexChanged(int)),
             this, SLOT(onSourceRangeChangedUi(int)));
-    connect(pMeasureModeCombo, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(onMeasureModeChangedUi(int)));
     connect(pMeasureRangeCombo, SIGNAL(currentIndexChanged(int)),
             this, SLOT(onMeasureRangeChangedUi(int)));
 
@@ -318,52 +293,23 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
     QString sValue = pSourceModeCombo->itemText(selectedItem);
     if(sValue == QString("Source V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
-        pMeasureModeCombo->setCurrentText("Measure I");
     }
     else if(sValue == QString("Source I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
-        pMeasureModeCombo->setCurrentText("Measure V");
     }
     else if(sValue == QString("Dc Sweep V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_V);
-        pMeasureModeCombo->setCurrentText("Measure I");
     }
     else if(sValue == QString("Dc Sweep I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_I);
-        pMeasureModeCombo->setCurrentText("Measure V");
     }
     else if(sValue == QString("Pulsed Swp V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_V);
-        pMeasureModeCombo->setCurrentText("Measure I");
     }
     else if(sValue == QString("Pulsed Swp I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_I);
-        pMeasureModeCombo->setCurrentText("Measure V");
     }
 
-    (void)bResult;
-}
-
-
-void
-ChannelTab::onMeasureModeChangedUi(int selectedItem) {
-#ifndef QT_NO_DEBUG
-    qDebug() << __FILE__
-             << "Line:"
-             << __LINE__
-             << __FUNCTION__
-             << "Channel"
-             << pChannel->getName()
-             << pMeasureModeCombo->itemText(selectedItem);
-#endif
-    QString sValue = pMeasureModeCombo->itemText(selectedItem);
-    bool bResult;
-    if(sValue.contains("I")) {
-        bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
-    }
-    else { // Measure
-        bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
-    }
     (void)bResult;
 }
 
@@ -438,11 +384,9 @@ ChannelTab::setSourceMode_Ui(bool bSourceV) {
              << pChannel->getName();
 #endif
     if(bSourceV) {
-        pMeasureModeCombo->setCurrentIndex(0);
         pSourceModeCombo->setCurrentIndex(1);
     }
     else {
-        pMeasureModeCombo->setCurrentIndex(1);
         pSourceModeCombo->setCurrentIndex(0);
     }
 }

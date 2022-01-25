@@ -67,7 +67,6 @@ public slots:
 
     void onSourceRangeChangedUi(int selectedItem);
     void onSourceModeChangedUi(int selectedItem);
-    void onMeasureModeChangedUi(int selectedItem);
     void onMeasureRangeChangedUi(int selectedItem);
     void onOnOffChangedUi(int);
 
@@ -103,11 +102,13 @@ private:
     QLineEdit*    pOffTimeEdit;
     QLineEdit*    pBiasEdit;
 
-    QLabel*    pMeasureModeLabel;
     QLabel*    pMeasureRangeLabel;
     QLabel*    pMeasureLimitLabel;
 
-    QComboBox* pMeasureModeCombo;
+    QCheckBox* pMeasureCurrent;
+    QCheckBox* pMeasureVoltage;
+    QCheckBox* pMeasureResistance;
+    QCheckBox* pMeasurePower;
     QComboBox* pMeasureRangeCombo;
     QLineEdit* pMeasureRangeEdit;
     QLineEdit* pMeasureLimitEdit;
