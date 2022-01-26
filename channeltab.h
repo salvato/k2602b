@@ -37,14 +37,6 @@ class ChannelTab : public QWidget
     Q_OBJECT
 public:
     explicit ChannelTab(K2602B_Channel* pCh, QWidget *parent = nullptr);
-    typedef enum {
-        Source_V=0,
-        Source_I,
-        DcSweep_V,
-        DcSweep_I,
-        PulsedSweep_V,
-        PulsedSweep_I
-    } sourceMode;
 
 public:
     void setOnOff_Ui(bool bOn);
@@ -62,7 +54,7 @@ protected:
     void InitLayout();
     void InitSignals();
     void CreateUiElements();
-    void UpdateUi(sourceMode mode);
+    void UpdateSourceModeUi(K2602B_Channel::smuFunction mode);
 
 signals:
 

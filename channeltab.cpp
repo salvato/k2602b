@@ -197,9 +197,9 @@ ChannelTab::InitLayout() {
 
 
 void
-ChannelTab::UpdateUi(sourceMode mode) {
+ChannelTab::UpdateSourceModeUi(K2602B_Channel::smuFunction mode) {
     switch (mode) {
-        case Source_V: {
+        case K2602B_Channel::VOLTAGE : {
             pSourceStartLabel->hide();
             pSourceStopLabel->hide();
             pSourceSettlingTimeLabel->hide();
@@ -216,7 +216,7 @@ ChannelTab::UpdateUi(sourceMode mode) {
             pBiasEdit->hide();
             break;
         }
-        case Source_I: {
+    case K2602B_Channel::CURRENT : {
             pSourceStartLabel->hide();
             pSourceStopLabel->hide();
             pSourceSettlingTimeLabel->hide();
@@ -233,7 +233,7 @@ ChannelTab::UpdateUi(sourceMode mode) {
             pBiasEdit->hide();
             break;
         }
-        case DcSweep_V: {
+    case K2602B_Channel::DC_SWEEP_V : {
             pSourceStartLabel->show();
             pSourceStopLabel->show();
             pSourceSettlingTimeLabel->show();
@@ -250,7 +250,7 @@ ChannelTab::UpdateUi(sourceMode mode) {
             pBiasEdit->hide();
             break;
         }
-        case DcSweep_I: {
+        case K2602B_Channel::DC_SWEEP_I: {
             pSourceStartLabel->show();
             pSourceStopLabel->show();
             pSourceSettlingTimeLabel->show();
@@ -267,7 +267,7 @@ ChannelTab::UpdateUi(sourceMode mode) {
             pBiasEdit->hide();
             break;
         }
-        case PulsedSweep_V: {
+        case K2602B_Channel::PLSD_SWEEP_V : {
             pSourceStartLabel->show();
             pSourceStopLabel->show();
             pSourceSettlingTimeLabel->show();
@@ -284,7 +284,7 @@ ChannelTab::UpdateUi(sourceMode mode) {
             pBiasEdit->show();
             break;
         }
-        case PulsedSweep_I: {
+        case K2602B_Channel::PLSD_SWEEP_I : {
             pSourceStartLabel->show();
             pSourceStopLabel->show();
             pSourceSettlingTimeLabel->show();
@@ -390,27 +390,27 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
     QString sValue = pSourceModeCombo->itemText(selectedItem);
     if(sValue == QString("Source V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
-        UpdateUi(Source_V);
+        UpdateSourceModeUi(K2602B_Channel::VOLTAGE);
     }
     else if(sValue == QString("Source I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
-        UpdateUi(Source_I);
+        UpdateSourceModeUi(K2602B_Channel::CURRENT);
     }
     else if(sValue == QString("Dc Sweep V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_V);
-        UpdateUi(DcSweep_V);
+        UpdateSourceModeUi(K2602B_Channel::DC_SWEEP_V);
     }
     else if(sValue == QString("Dc Sweep I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_I);
-        UpdateUi(DcSweep_I);
+        UpdateSourceModeUi(K2602B_Channel::DC_SWEEP_I);
     }
     else if(sValue == QString("Plsd Sweep V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_V);
-        UpdateUi(PulsedSweep_V);
+        UpdateSourceModeUi(K2602B_Channel::PLSD_SWEEP_V);
     }
     else if(sValue == QString("Plsd Sweep I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_I);
-        UpdateUi(PulsedSweep_I);
+        UpdateSourceModeUi(K2602B_Channel::PLSD_SWEEP_I);
     }
 
     (void)bResult;
