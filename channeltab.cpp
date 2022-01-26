@@ -98,17 +98,17 @@ ChannelTab::CreateUiElements() {
     pOnOffButton       = new QCheckBox("On/Off", this);
 
     // ComboBoxes Initialization
-    pSourceModeCombo->addItems(QStringList(QList<QString>{
+    pSourceModeCombo->addItems(QStringList(QList<QString> {
                                                "Source V",
                                                "Source I",
                                                "Dc Sweep V",
                                                "Dc Sweep I",
                                                "Plsd Sweep V",
                                                "Plsd Sweep I"}));
-    pSourceRangeCombo->addItems(QStringList(QList<QString>{
+    pSourceRangeCombo->addItems(QStringList(QList<QString> {
                                                 "AUTO",
                                                 "MANUAL"}));
-    pMeasureRangeCombo->addItems(QStringList(QList<QString>{
+    pMeasureRangeCombo->addItems(QStringList(QList<QString> {
                                                  "AUTO",
                                                  "MANUAL"}));
     // Ui Elements Attributes
@@ -193,7 +193,116 @@ ChannelTab::InitLayout() {
     pLayout->addSpacing(24);
     pLayout->addWidget(pOtherGroupBox);
     setLayout(pLayout);
+}
 
+
+void
+ChannelTab::UpdateUi(sourceMode mode) {
+    switch (mode) {
+        case Source_V: {
+            pSourceStartLabel->hide();
+            pSourceStopLabel->hide();
+            pSourceSettlingTimeLabel->hide();
+            pSourceNpointsLabel->hide();
+            pSourceStartEdit->hide();
+            pSourceStopEdit->hide();
+            pSourceSettlingTimeEdit->hide();
+            pSourceNpointsEdit->hide();
+            pOnTimeLabel->hide();
+            pOffTimeLabel->hide();
+            pBiasLabel->hide();
+            pOnTimeEdit->hide();
+            pOffTimeEdit->hide();
+            pBiasEdit->hide();
+            break;
+        }
+        case Source_I: {
+            pSourceStartLabel->hide();
+            pSourceStopLabel->hide();
+            pSourceSettlingTimeLabel->hide();
+            pSourceNpointsLabel->hide();
+            pSourceStartEdit->hide();
+            pSourceStopEdit->hide();
+            pSourceSettlingTimeEdit->hide();
+            pSourceNpointsEdit->hide();
+            pOnTimeLabel->hide();
+            pOffTimeLabel->hide();
+            pBiasLabel->hide();
+            pOnTimeEdit->hide();
+            pOffTimeEdit->hide();
+            pBiasEdit->hide();
+            break;
+        }
+        case DcSweep_V: {
+            pSourceStartLabel->show();
+            pSourceStopLabel->show();
+            pSourceSettlingTimeLabel->show();
+            pSourceNpointsLabel->show();
+            pSourceStartEdit->show();
+            pSourceStopEdit->show();
+            pSourceSettlingTimeEdit->show();
+            pSourceNpointsEdit->show();
+            pOnTimeLabel->hide();
+            pOffTimeLabel->hide();
+            pBiasLabel->hide();
+            pOnTimeEdit->hide();
+            pOffTimeEdit->hide();
+            pBiasEdit->hide();
+            break;
+        }
+        case DcSweep_I: {
+            pSourceStartLabel->show();
+            pSourceStopLabel->show();
+            pSourceSettlingTimeLabel->show();
+            pSourceNpointsLabel->show();
+            pSourceStartEdit->show();
+            pSourceStopEdit->show();
+            pSourceSettlingTimeEdit->show();
+            pSourceNpointsEdit->show();
+            pOnTimeLabel->hide();
+            pOffTimeLabel->hide();
+            pBiasLabel->hide();
+            pOnTimeEdit->hide();
+            pOffTimeEdit->hide();
+            pBiasEdit->hide();
+            break;
+        }
+        case PulsedSweep_V: {
+            pSourceStartLabel->show();
+            pSourceStopLabel->show();
+            pSourceSettlingTimeLabel->show();
+            pSourceNpointsLabel->show();
+            pSourceStartEdit->show();
+            pSourceStopEdit->show();
+            pSourceSettlingTimeEdit->show();
+            pSourceNpointsEdit->show();
+            pOnTimeLabel->show();
+            pOffTimeLabel->show();
+            pBiasLabel->show();
+            pOnTimeEdit->show();
+            pOffTimeEdit->show();
+            pBiasEdit->show();
+            break;
+        }
+        case PulsedSweep_I: {
+            pSourceStartLabel->show();
+            pSourceStopLabel->show();
+            pSourceSettlingTimeLabel->show();
+            pSourceNpointsLabel->show();
+            pSourceStartEdit->show();
+            pSourceStopEdit->show();
+            pSourceSettlingTimeEdit->show();
+            pSourceNpointsEdit->show();
+            pOnTimeLabel->show();
+            pOffTimeLabel->show();
+            pBiasLabel->show();
+            pOnTimeEdit->show();
+            pOffTimeEdit->show();
+            pBiasEdit->show();
+            break;
+        }
+
+    }
 //    pSourceStartLabel->hide();
 //    pSourceStopLabel->hide();
 //    pSourceNpointsLabel->hide();
@@ -293,21 +402,27 @@ ChannelTab::onSourceModeChangedUi(int selectedItem) {
     QString sValue = pSourceModeCombo->itemText(selectedItem);
     if(sValue == QString("Source V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::VOLTAGE);
+        UpdateUi(Source_V);
     }
     else if(sValue == QString("Source I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::CURRENT);
+        UpdateUi(Source_I);
     }
     else if(sValue == QString("Dc Sweep V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_V);
+        UpdateUi(DcSweep_V);
     }
     else if(sValue == QString("Dc Sweep I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::DC_SWEEP_I);
+        UpdateUi(DcSweep_I);
     }
-    else if(sValue == QString("Pulsed Swp V")) {
+    else if(sValue == QString("Plsd Sweep V")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_V);
+        UpdateUi(PulsedSweep_V);
     }
-    else if(sValue == QString("Pulsed Swp I")) {
+    else if(sValue == QString("Plsd Sweep I")) {
         bResult = pChannel->setSourceFunction(K2602B_Channel::PLSD_SWEEP_I);
+        UpdateUi(PulsedSweep_I);
     }
 
     (void)bResult;
