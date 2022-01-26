@@ -303,19 +303,7 @@ ChannelTab::UpdateUi(sourceMode mode) {
         }
 
     }
-//    pSourceStartLabel->hide();
-//    pSourceStopLabel->hide();
-//    pSourceNpointsLabel->hide();
-//    pSourceStartEdit->hide();
-//    pSourceStopEdit->hide();
-//    pSourceSettlingTimeEdit->hide();
-//    pSourceNpointsEdit->hide();
-//    pOnTimeLabel->hide();
-//    pOffTimeLabel->hide();
-//    pBiasLabel->hide();
-//    pOnTimeEdit->hide();
-//    pOffTimeEdit->hide();
-//    pBiasEdit->hide();
+
 }
 
 
